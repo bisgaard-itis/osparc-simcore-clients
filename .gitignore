@@ -65,5 +65,10 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 
-# generator outputs
-git_push.sh
+# vscode config
+.vscode/settings.json
+
+# docs output
+site
+
+.nox
