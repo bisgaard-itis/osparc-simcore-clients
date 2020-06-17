@@ -2,13 +2,15 @@
 
 
 ![test](https://github.com/ITISFoundation/osparc-simcore-python-client/workflows/test/badge.svg)
-[![codecov](https://codecov.io/gh/ITISFoundation/osparc-simcore-python-client/branch/master/graph/badge.svg)](https://codecov.io/gh/ITISFoundation/osparc-simcore-python-client)
+<!-- 
+TODO: activate when service is up and running in production
+[![codecov](https://codecov.io/gh/ITISFoundation/osparc-simcore-python-client/branch/master/graph/badge.svg)](https://codecov.io/gh/ITISFoundation/osparc-simcore-python-client) -->
 
 
 Python client for osparc-simcore Public RESTful API
 
-- API version: 0.2.1
-- Package version: 0.2.1
+- API version: 0.3.0
+- Package version: 0.3.0
 - Build package: org.openapitools.codegen.languages.PythonClientCodegen
 
 ## Requirements
@@ -62,11 +64,10 @@ configuration.host = "http://localhost"
 with osparc.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = osparc.MetaApi(api_client)
-    extended_info = False # bool |  (optional) (default to False)
 
     try:
         # Get Service Metadata
-        api_response = api_instance.get_service_metadata(extended_info=extended_info)
+        api_response = api_instance.get_service_metadata()
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling MetaApi->get_service_metadata: %s\n" % e)
@@ -81,7 +82,7 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *MetaApi* | [**get_service_metadata**](docs/MetaApi.md#get_service_metadata) | **GET** /v0/meta | Get Service Metadata
 *UsersApi* | [**get_my_profile**](docs/UsersApi.md#get_my_profile) | **GET** /v0/me | Get My Profile
-*UsersApi* | [**update_my_profile**](docs/UsersApi.md#update_my_profile) | **PATCH** /v0/me | Update My Profile
+*UsersApi* | [**update_my_profile**](docs/UsersApi.md#update_my_profile) | **PUT** /v0/me | Update My Profile
 
 
 ## Documentation For Models
@@ -101,4 +102,10 @@ Class | Method | HTTP request | Description
 ## HTTPBasic
 
 - **Type**: HTTP basic authentication
+
+
+## Author
+
+
+
 
