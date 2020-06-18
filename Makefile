@@ -12,17 +12,18 @@ info:
 	@echo ' VCS_URL          : ${VCS_URL}'
 	@echo ' VCS_REF          : ${VCS_REF}'
 	# installed in .venv
+	@which python
 	@pip list
 	# package
 	-@echo ' name         : ' $(shell python ${CURDIR}/setup.py --name)
 	-@echo ' version      : ' $(shell python ${CURDIR}/setup.py --version)
 	# nox
-	@echo nox --list-sessions
+	@echo nox --list-session
 
 
 
 
-## DEVELOPMENT
+## PYTHON DEVELOPMENT
 
 .venv:
 	python3 -m venv $@
@@ -44,6 +45,7 @@ install-dev:
 
 .PHONY: tests
 tests:
+	# TODO: add here tests coverage
 	pytest -v --pdb $(CURDIR)
 
 
@@ -57,19 +59,18 @@ outputs:=$(subst docs,code_samples,$(markdowns:.md=.ipynb))
 
 notebooks: $(outputs)
 
+# FIXME: should add a link in mds and REMOVE them from notebooks
 docs/code_samples/%.ipynb:docs/%.md
 	notedown $< >$@
 
 
 
-
 ## DOCUMENTATION
 
-.PHONY: up-doc
-up-doc:
+.PHONY: serve-doc
+serve-doc:
 	# starting doc website
-	python -m http.server 50001
-
+	cd docs && python3 -m http.server 50001
 
 
 
