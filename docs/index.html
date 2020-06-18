@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>osparc API client</title>
-  <link rel="icon" href="_media/favicon.ico">
+  <link rel="icon" href="_media/favicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="A python client SDK for osparc API">
   <meta name="viewport"
@@ -18,16 +18,26 @@
   <div id="app">Loading ...</div>
   <script>
     window.$docsify = {
-      search: 'auto',
-      name: 'osparc API client',
-      repo: 'https://github.com/ITISFoundation/osparc-simcore-python-client.git',
       loadSidebar: false,
       maxLevel: 2,
+      name: 'osparc API client',
+      repo: 'https://github.com/ITISFoundation/osparc-simcore-python-client.git',
       relativePath: true,
-      // plugins
+      // copy-code
       copyCode: {
         buttonText: 'Copy to clipboard',
       },
+      // search
+      search: 'auto', // default
+      search: {
+        maxAge: 86400000, // Expiration time, the default one day
+        paths: 'auto',
+        placeholder: 'Type to search',
+        noData: 'No Results!',
+        // Headline depth, 1 - 6
+        depth: 6,
+        hideOtherSidebarContent: false, // whether or not to hide other sidebar content
+     }
     }
   </script>
   <script src="lib/docsify.min.js"></script>
