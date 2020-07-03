@@ -16,7 +16,7 @@ jobs:
             python-version: 3.7
         - name: Upgrade package tools
           run: >-
-            python -m pip -U 
+            python -m pip install -U 
             pip 
             setuptools 
             wheel
