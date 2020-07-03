@@ -1,6 +1,5 @@
 # Python client for osparc-simcore API
 
-
 ![test](https://github.com/ITISFoundation/osparc-simcore-python-client/workflows/test/badge.svg)
 <!--
 TODO: activate when service is up and running in production
@@ -37,7 +36,7 @@ import osparc
 
 ## Getting Started
 
-Please follow the [installation procedure](#installation--usage) and then run the following:
+Please follow the installation procedure above and then run the following:
 
 ```python
 from __future__ import print_function
@@ -49,6 +48,7 @@ from pprint import pprint
 
 # Defining host is optional and default to http://localhost
 configuration.host = "http://localhost"
+
 # Enter a context with an instance of the API client
 with osparc.ApiClient(configuration) as api_client:
     # Create an instance of the API class
