@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-__version__ = "0.3.3"
+__version__ = "0.3.4"
 
 # import apis into sdk package
 from osparc.api.meta_api import MetaApi
