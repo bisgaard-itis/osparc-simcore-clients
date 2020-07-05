@@ -1,6 +1,11 @@
 # Python client for osparc-simcore API
 
 ![test](https://github.com/ITISFoundation/osparc-simcore-python-client/workflows/test/badge.svg)
+[![PyPI](https://img.shields.io/pypi/v/osparc)](https://pypi.org/project/osparc/)
+[![](https://img.shields.io/pypi/status/osparc)](https://pypi.org/project/osparc/)
+[![](https://img.shields.io/pypi/l/osparc)](https://pypi.org/project/osparc/)
+
+
 <!--
 TODO: activate when service is up and running in production
 [![codecov](https://codecov.io/gh/ITISFoundation/osparc-simcore-python-client/branch/master/graph/badge.svg)](https://codecov.io/gh/ITISFoundation/osparc-simcore-python-client) -->
