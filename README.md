@@ -52,7 +52,7 @@ from pprint import pprint
 
 # Defining host is optional and default to http://localhost
 configuration = osparc.Configuration()
-configuration.host = "http://localhost"
+configuration.host = "https://localhost"
 
 # Enter a context with an instance of the API client
 with osparc.ApiClient(configuration) as api_client:
