@@ -18,11 +18,14 @@ Get Service Metadata
 from __future__ import print_function
 import time
 import osparc
+from osparc.configuration import Configuration
 from osparc.rest import ApiException
 from pprint import pprint
 
+cfg = Configuration(host="https://localhost")
+
 # Enter a context with an instance of the API client
-with osparc.ApiClient() as api_client:
+with osparc.ApiClient(cfg) as api_client:
     # Create an instance of the API class
     api_instance = osparc.MetaApi(api_client)
 
