@@ -50,8 +50,8 @@ import osparc
 from osparc.rest import ApiException
 from pprint import pprint
 
-
 # Defining host is optional and default to http://localhost
+configuration = osparc.Configuration()
 configuration.host = "http://localhost"
 
 # Enter a context with an instance of the API client
