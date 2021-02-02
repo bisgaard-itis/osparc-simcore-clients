@@ -1,0 +1,6 @@
+pytest
+
+python-dotenv
+pytest-cov
+pytest-randomly
+pytest-asyncio

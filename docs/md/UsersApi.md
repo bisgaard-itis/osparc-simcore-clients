@@ -1,11 +1,11 @@
 # osparc.UsersApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *https://api.osparc.io*
 
-| Method                                                 | HTTP request   | Description       |
-| ------------------------------------------------------ | -------------- | ----------------- |
-| [**get_my_profile**](UsersApi.md#get_my_profile)       | **GET** /v0/me | Get My Profile    |
-| [**update_my_profile**](UsersApi.md#update_my_profile) | **PUT** /v0/me | Update My Profile |
+Method | HTTP request | Description
+------------- | ------------- | -------------
+[**get_my_profile**](UsersApi.md#get_my_profile) | **GET** /v0/me | Get My Profile
+[**update_my_profile**](UsersApi.md#update_my_profile) | **PUT** /v0/me | Update My Profile
 
 
 # **get_my_profile**
@@ -16,7 +16,6 @@ Get My Profile
 ### Example
 
 * Basic Authentication (HTTPBasic):
-
 
 ```python
 from __future__ import print_function
@@ -29,13 +28,13 @@ configuration = osparc.Configuration()
 configuration.username = 'YOUR_USERNAME'
 configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost
-configuration.host = "http://localhost"
+# Defining host is optional and default to https://api.osparc.io
+configuration.host = "https://api.osparc.io"
 # Enter a context with an instance of the API client
 with osparc.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = osparc.UsersApi(api_client)
-
+    
     try:
         # Get My Profile
         api_response = api_instance.get_my_profile()
@@ -43,7 +42,6 @@ with osparc.ApiClient(configuration) as api_client:
     except ApiException as e:
         print("Exception when calling UsersApi->get_my_profile: %s\n" % e)
 ```
-[Download UsersApi.ipynb](md/code_samples/UsersApi.ipynb ':ignore')
 
 ### Parameters
 This endpoint does not need any parameter.
@@ -62,9 +60,9 @@ This endpoint does not need any parameter.
  - **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description         | Response headers |
-| ----------- | ------------------- | ---------------- |
-| **200**     | Successful Response | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Successful Response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -77,7 +75,6 @@ Update My Profile
 
 * Basic Authentication (HTTPBasic):
 
-
 ```python
 from __future__ import print_function
 import time
@@ -85,18 +82,17 @@ import osparc
 from osparc.rest import ApiException
 from pprint import pprint
 configuration = osparc.Configuration()
-
 # Configure HTTP basic authorization: HTTPBasic
 configuration.username = 'YOUR_USERNAME'
 configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost
-configuration.host = "http://localhost"
+# Defining host is optional and default to https://api.osparc.io
+configuration.host = "https://api.osparc.io"
 # Enter a context with an instance of the API client
 with osparc.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = osparc.UsersApi(api_client)
-    profile_update = osparc.ProfileUpdate() # ProfileUpdate |
+    profile_update = osparc.ProfileUpdate() # ProfileUpdate | 
 
     try:
         # Update My Profile
@@ -105,14 +101,12 @@ with osparc.ApiClient(configuration) as api_client:
     except ApiException as e:
         print("Exception when calling UsersApi->update_my_profile: %s\n" % e)
 ```
-[Download UsersApi.ipynb](md/code_samples/UsersApi.ipynb ':ignore')
-
 
 ### Parameters
 
-| Name               | Type                                  | Description | Notes |
-| ------------------ | ------------------------------------- | ----------- | ----- |
-| **profile_update** | [**ProfileUpdate**](ProfileUpdate.md) |             |
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **profile_update** | [**ProfileUpdate**](ProfileUpdate.md)|  | 
 
 ### Return type
 
@@ -128,11 +122,10 @@ with osparc.ApiClient(configuration) as api_client:
  - **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description         | Response headers |
-| ----------- | ------------------- | ---------------- |
-| **200**     | Successful Response | -                |
-| **422**     | Validation Error    | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Successful Response |  -  |
+**422** | Validation Error |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
 
