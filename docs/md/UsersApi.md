@@ -9,6 +9,7 @@ Method | HTTP request | Description
 
 
 # **get_my_profile**
+
 > Profile get_my_profile()
 
 Get My Profile
@@ -25,8 +26,8 @@ from osparc.rest import ApiException
 from pprint import pprint
 configuration = osparc.Configuration()
 # Configure HTTP basic authorization: HTTPBasic
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
+configuration.username = 'YOUR_API_KEY_HERE'
+configuration.password = 'YOUR_API_SECRET_HERE'
 
 # Defining host is optional and default to https://api.osparc.io
 configuration.host = "https://api.osparc.io"
@@ -67,6 +68,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_my_profile**
+
 > Profile update_my_profile(profile_update)
 
 Update My Profile
@@ -83,8 +85,8 @@ from osparc.rest import ApiException
 from pprint import pprint
 configuration = osparc.Configuration()
 # Configure HTTP basic authorization: HTTPBasic
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
+configuration.username = 'YOUR_API_KEY_HERE'
+configuration.password = 'YOUR_API_SECRET_HERE'
 
 # Defining host is optional and default to https://api.osparc.io
 configuration.host = "https://api.osparc.io"

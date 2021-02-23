@@ -97,7 +97,7 @@ class Configuration(object):
       )
     """
 
-    def __init__(self, host="http://localhost",
+    def __init__(self, host="https://api.osparc.io",
                  api_key=None, api_key_prefix=None,
                  username=None, password=None,
                  signing_info=None):
@@ -336,7 +336,7 @@ class Configuration(object):
                "OS: {env}\n"\
                "Python Version: {pyversion}\n"\
                "Version of the API: 0.3.0\n"\
-               "SDK Package Version: 0.3.0".\
+               "SDK Package Version: 0.4.2".\
                format(env=sys.platform, pyversion=sys.version)
 
     def get_host_settings(self):

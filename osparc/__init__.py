@@ -14,11 +14,10 @@
 
 from __future__ import absolute_import
 
-__version__ = "0.3.0"
+__version__ = "0.4.2"
 
 # import apis into sdk package
 from osparc.api.files_api import FilesApi
-from osparc.api.jobs_api import JobsApi
 from osparc.api.meta_api import MetaApi
 from osparc.api.solvers_api import SolversApi
 from osparc.api.users_api import UsersApi
@@ -33,15 +32,14 @@ from osparc.exceptions import ApiKeyError
 from osparc.exceptions import ApiException
 # import models into sdk package
 from osparc.models.body_upload_file_v0_files_content_put import BodyUploadFileV0FilesContentPut
-from osparc.models.file_metadata import FileMetadata
+from osparc.models.file import File
 from osparc.models.groups import Groups
 from osparc.models.http_validation_error import HTTPValidationError
 from osparc.models.job import Job
-from osparc.models.job_input import JobInput
-from osparc.models.job_output import JobOutput
+from osparc.models.job_inputs import JobInputs
+from osparc.models.job_outputs import JobOutputs
 from osparc.models.job_status import JobStatus
 from osparc.models.meta import Meta
-from osparc.models.port_value import PortValue
 from osparc.models.profile import Profile
 from osparc.models.profile_update import ProfileUpdate
 from osparc.models.solver import Solver
