@@ -86,46 +86,43 @@ with osparc.ApiClient(cfg) as api_client:
 
 ```
 
-
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://api.osparc.io*
+All URIs are relative to *http://localhost*
 
-Class        | Method                                                                                  | HTTP request                                    | Description
--------------|-----------------------------------------------------------------------------------------|-------------------------------------------------|-------------------------------
-*FilesApi*   | [**download_file**](docs/md/FilesApi.md#download_file)                                     | **GET** /v0/files/{file_id}/content             | Download File
-*FilesApi*   | [**get_file**](docs/md/FilesApi.md#get_file)                                               | **GET** /v0/files/{file_id}                     | Get File
-*FilesApi*   | [**list_files**](docs/md/FilesApi.md#list_files)                                           | **GET** /v0/files                               | List Files
-*FilesApi*   | [**upload_file**](docs/md/FilesApi.md#upload_file)                                         | **PUT** /v0/files/content                       | Upload File
-*JobsApi*    | [**get_job**](docs/md/JobsApi.md#get_job)                                                  | **GET** /v0/jobs/{job_id}                       | Get Job
-*JobsApi*    | [**get_job_output**](docs/md/JobsApi.md#get_job_output)                                    | **GET** /v0/jobs/{job_id}/outputs/{output_name} | Get Job Output
-*JobsApi*    | [**inspect_job**](docs/md/JobsApi.md#inspect_job)                                          | **POST** /v0/jobs/{job_id}:inspect              | Inspect Job
-*JobsApi*    | [**list_all_jobs**](docs/md/JobsApi.md#list_all_jobs)                                      | **GET** /v0/jobs                                | List All Jobs
-*JobsApi*    | [**list_job_outputs**](docs/md/JobsApi.md#list_job_outputs)                                | **GET** /v0/jobs/{job_id}/outputs               | List Job Outputs
-*JobsApi*    | [**start_job**](docs/md/JobsApi.md#start_job)                                              | **POST** /v0/jobs/{job_id}:start                | Start Job
-*JobsApi*    | [**stop_job**](docs/md/JobsApi.md#stop_job)                                                | **POST** /v0/jobs/{job_id}:stop                 | Stop Job
-*MetaApi*    | [**get_service_metadata**](docs/md/MetaApi.md#get_service_metadata)                        | **GET** /v0/meta                                | Get Service Metadata
-*SolversApi* | [**create_job**](docs/md/SolversApi.md#create_job)                                         | **POST** /v0/solvers/{solver_id}/jobs           | Create Job
-*SolversApi* | [**get_solver**](docs/md/SolversApi.md#get_solver)                                         | **GET** /v0/solvers/{solver_id}                 | Get Solver
-*SolversApi* | [**get_solver_by_name_and_version**](docs/md/SolversApi.md#get_solver_by_name_and_version) | **GET** /v0/solvers/{solver_name}/{version}     | Get Solver By Name And Version
-*SolversApi* | [**list_jobs**](docs/md/SolversApi.md#list_jobs)                                           | **GET** /v0/solvers/{solver_id}/jobs            | List Jobs
-*SolversApi* | [**list_solvers**](docs/md/SolversApi.md#list_solvers)                                     | **GET** /v0/solvers                             | List Solvers
-*UsersApi*   | [**get_my_profile**](docs/md/UsersApi.md#get_my_profile)                                   | **GET** /v0/me                                  | Get My Profile
-*UsersApi*   | [**update_my_profile**](docs/md/UsersApi.md#update_my_profile)                             | **PUT** /v0/me                                  | Update My Profile
+Class | Method | HTTP request | Description
+------------ | ------------- | ------------- | -------------
+*FilesApi* | [**download_file**](docs/md/FilesApi.md#download_file) | **GET** /v0/files/{file_id}/content | Download File
+*FilesApi* | [**get_file**](docs/md/FilesApi.md#get_file) | **GET** /v0/files/{file_id} | Get File
+*FilesApi* | [**list_files**](docs/md/FilesApi.md#list_files) | **GET** /v0/files | List Files
+*FilesApi* | [**upload_file**](docs/md/md/FilesApi.md#upload_file) | **PUT** /v0/files/content | Upload File
+*MetaApi* | [**get_service_metadata**](docs/md/md/MetaApi.md#get_service_metadata) | **GET** /v0/meta | Get Service Metadata
+*SolversApi* | [**create_job**](docs/md/SolversApi.md#create_job) | **POST** /v0/solvers/{solver_key}/releases/{version}/jobs | Create Job
+*SolversApi* | [**get_job**](docs/md/SolversApi.md#get_job) | **GET** /v0/solvers/{solver_key}/releases/{version}/jobs/{job_id} | Get Job
+*SolversApi* | [**get_job_outputs**](docs/md/SolversApi.md#get_job_outputs) | **GET** /v0/solvers/{solver_key}/releases/{version}/jobs/{job_id}/outputs | Get Job Outputs
+*SolversApi* | [**get_solver**](docs/md/SolversApi.md#get_solver) | **GET** /v0/solvers/{solver_key}/latest | Get Latest Release of a Solver
+*SolversApi* | [**get_solver_release**](docs/md/SolversApi.md#get_solver_release) | **GET** /v0/solvers/{solver_key}/releases/{version} | Get Solver Release
+*SolversApi* | [**inspect_job**](docs/md/SolversApi.md#inspect_job) | **POST** /v0/solvers/{solver_key}/releases/{version}/jobs/{job_id}:inspect | Inspect Job
+*SolversApi* | [**list_jobs**](docs/md/SolversApi.md#list_jobs) | **GET** /v0/solvers/{solver_key}/releases/{version}/jobs | List Jobs
+*SolversApi* | [**list_solver_releases**](docs/md/SolversApi.md#list_solver_releases) | **GET** /v0/solvers/{solver_key}/releases | List Solver Releases
+*SolversApi* | [**list_solvers**](docs/md/SolversApi.md#list_solvers) | **GET** /v0/solvers | List Solvers
+*SolversApi* | [**list_solvers_releases**](docs/md/SolversApi.md#list_solvers_releases) | **GET** /v0/solvers/releases | Lists All Releases
+*SolversApi* | [**start_job**](docs/md/SolversApi.md#start_job) | **POST** /v0/solvers/{solver_key}/releases/{version}/jobs/{job_id}:start | Start Job
+*SolversApi* | [**stop_job**](docs/md/SolversApi.md#stop_job) | **POST** /v0/solvers/{solver_key}/releases/{version}/jobs/{job_id}:stop | Stop Job
+*UsersApi* | [**get_my_profile**](docs/md/UsersApi.md#get_my_profile) | **GET** /v0/me | Get My Profile
+*UsersApi* | [**update_my_profile**](docs/md/UsersApi.md#update_my_profile) | **PUT** /v0/me | Update My Profile
 
 
 ## Documentation For Models
 
- - [BodyUploadFileV0FilesContentPut](docs/md/BodyUploadFileV0FilesContentPut.md)
- - [FileMetadata](docs/md/FileMetadata.md)
+ - [File](docs/md/File.md)
  - [Groups](docs/md/Groups.md)
  - [HTTPValidationError](docs/md/HTTPValidationError.md)
  - [Job](docs/md/Job.md)
- - [JobInput](docs/md/JobInput.md)
- - [JobOutput](docs/md/JobOutput.md)
+ - [JobInputs](docs/md/JobInputs.md)
+ - [JobOutputs](docs/md/JobOutputs.md)
  - [JobStatus](docs/md/JobStatus.md)
  - [Meta](docs/md/Meta.md)
- - [PortValue](docs/md/PortValue.md)
  - [Profile](docs/md/Profile.md)
  - [ProfileUpdate](docs/md/ProfileUpdate.md)
  - [Solver](docs/md/Solver.md)
@@ -133,6 +130,7 @@ Class        | Method                                                           
  - [UserRoleEnum](docs/md/UserRoleEnum.md)
  - [UsersGroup](docs/md/UsersGroup.md)
  - [ValidationError](docs/md/ValidationError.md)
+
 
 ## Documentation For Authorization
 
