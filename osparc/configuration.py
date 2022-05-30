@@ -96,11 +96,12 @@ class Configuration(object):
         )
       )
     """
-
+    # PATCH ----------
     def __init__(self, host="https://api.osparc.io",
                  api_key=None, api_key_prefix=None,
                  username=None, password=None,
                  signing_info=None):
+    # PATCH ----------
         """Constructor
         """
         self.host = host

@@ -220,11 +220,13 @@ class RESTClientObject(object):
             # In the python 3, the response.data is bytes.
             # we need to decode it to string.
             if six.PY3:
+                # PATCH-------------------------------------
                 try:
                     r.data = r.data.decode('utf8')
                 except UnicodeDecodeError:
                     # NOTE: hdf5 files cannot be decoded
                     pass
+                # PATCH-------------------------------------
 
         if not 200 <= r.status <= 299:
             raise ApiException(http_resp=r)
