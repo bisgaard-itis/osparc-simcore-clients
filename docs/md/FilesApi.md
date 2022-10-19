@@ -2,12 +2,12 @@
 
 All URIs are relative to *https://api.osparc.io*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**download_file**](FilesApi.md#download_file) | **GET** /v0/files/{file_id}/content | Download File
-[**get_file**](FilesApi.md#get_file) | **GET** /v0/files/{file_id} | Get File
-[**list_files**](FilesApi.md#list_files) | **GET** /v0/files | List Files
-[**upload_file**](FilesApi.md#upload_file) | **PUT** /v0/files/content | Upload File
+| Method                                         | HTTP request                        | Description   |
+| ---------------------------------------------- | ----------------------------------- | ------------- |
+| [**download_file**](FilesApi.md#download_file) | **GET** /v0/files/{file_id}/content | Download File |
+| [**get_file**](FilesApi.md#get_file)           | **GET** /v0/files/{file_id}         | Get File      |
+| [**list_files**](FilesApi.md#list_files)       | **GET** /v0/files                   | List Files    |
+| [**upload_file**](FilesApi.md#upload_file)     | **PUT** /v0/files/content           | Upload File   |
 
 
 # **download_file**
@@ -31,13 +31,12 @@ configuration = osparc.Configuration()
 configuration.username = 'YOUR_API_KEY_HERE'
 configuration.password = 'YOUR_API_SECRET_HERE'
 
-# Defining host is optional and default to https://api.osparc.io
-configuration.host = "https://api.osparc.io"
+
 # Enter a context with an instance of the API client
 with osparc.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = osparc.FilesApi(api_client)
-    file_id = 'file_id_example' # str | 
+    file_id = '2c04bbb2-a549-4764-9466-1c6c93e3882c' # str |
 
     try:
         # Download File
@@ -46,12 +45,11 @@ with osparc.ApiClient(configuration) as api_client:
     except ApiException as e:
         print("Exception when calling FilesApi->download_file: %s\n" % e)
 ```
-
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **file_id** | [**str**](.md)|  | 
+| Name        | Type           | Description | Notes |
+| ----------- | -------------- | ----------- | ----- |
+| **file_id** | [**str**](.md) |             |
 
 ### Return type
 
@@ -67,13 +65,15 @@ Name | Type | Description  | Notes
  - **Accept**: application/octet-stream, text/plain, application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Returns a arbitrary binary data |  -  |
-**404** | File not found |  -  |
-**422** | Validation Error |  -  |
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+| Status code | Description                     | Response headers |
+| ----------- | ------------------------------- | ---------------- |
+| **307**     | Successful Response             | -                |
+| **404**     | File not found                  | -                |
+| **200**     | Returns a arbitrary binary data | -                |
+| **422**     | Validation Error                | -                |
+
+[[Back to top]](#) [[Back to API Classes]](../README.md#documentation-for-api-classes) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_file**
 
@@ -81,7 +81,7 @@ Name | Type | Description  | Notes
 
 Get File
 
-Gets metadata for a given file resource 
+Gets metadata for a given file resource
 
 ### Example
 
@@ -98,13 +98,12 @@ configuration = osparc.Configuration()
 configuration.username = 'YOUR_API_KEY_HERE'
 configuration.password = 'YOUR_API_SECRET_HERE'
 
-# Defining host is optional and default to https://api.osparc.io
-configuration.host = "https://api.osparc.io"
+
 # Enter a context with an instance of the API client
 with osparc.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = osparc.FilesApi(api_client)
-    file_id = 'file_id_example' # str | 
+    file_id = '2c04bbb2-a549-4764-9466-1c6c93e3882c' # str |
 
     try:
         # Get File
@@ -116,9 +115,9 @@ with osparc.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **file_id** | [**str**](.md)|  | 
+| Name        | Type           | Description | Notes |
+| ----------- | -------------- | ----------- | ----- |
+| **file_id** | [**str**](.md) |             |
 
 ### Return type
 
@@ -134,13 +133,14 @@ Name | Type | Description  | Notes
  - **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Successful Response |  -  |
-**404** | File not found |  -  |
-**422** | Validation Error |  -  |
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+| Status code | Description         | Response headers |
+| ----------- | ------------------- | ---------------- |
+| **200**     | Successful Response | -                |
+| **404**     | File not found      | -                |
+| **422**     | Validation Error    | -                |
+
+[[Back to top]](#) [[Back to API Classes]](../README.md#documentation-for-api-classes) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_files**
 
@@ -148,7 +148,7 @@ Name | Type | Description  | Notes
 
 List Files
 
-Lists all files stored in the system  
+Lists all files stored in the system
 
 ### Example
 
@@ -165,13 +165,12 @@ configuration = osparc.Configuration()
 configuration.username = 'YOUR_API_KEY_HERE'
 configuration.password = 'YOUR_API_SECRET_HERE'
 
-# Defining host is optional and default to https://api.osparc.io
-configuration.host = "https://api.osparc.io"
+
 # Enter a context with an instance of the API client
 with osparc.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = osparc.FilesApi(api_client)
-    
+
     try:
         # List Files
         api_response = api_instance.list_files()
@@ -197,14 +196,14 @@ This endpoint does not need any parameter.
  - **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Successful Response |  -  |
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+| Status code | Description         | Response headers |
+| ----------- | ------------------- | ---------------- |
+| **200**     | Successful Response | -                |
+
+[[Back to top]](#) [[Back to API Classes]](../README.md#documentation-for-api-classes) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **upload_file**
-
 > File upload_file(file, content_length=content_length)
 
 Upload File
@@ -226,14 +225,13 @@ configuration = osparc.Configuration()
 configuration.username = 'YOUR_API_KEY_HERE'
 configuration.password = 'YOUR_API_SECRET_HERE'
 
-# Defining host is optional and default to https://api.osparc.io
-configuration.host = "https://api.osparc.io"
+
 # Enter a context with an instance of the API client
 with osparc.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = osparc.FilesApi(api_client)
-    file = '/path/to/file' # file | 
-content_length = 'content_length_example' # str |  (optional)
+    file = '/path/to/file' # file |
+    content_length = 'content_length_example' # str |  (optional)
 
     try:
         # Upload File
@@ -245,10 +243,10 @@ content_length = 'content_length_example' # str |  (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **file** | **file**|  | 
- **content_length** | **str**|  | [optional] 
+| Name               | Type     | Description | Notes      |
+| ------------------ | -------- | ----------- | ---------- |
+| **file**           | **file** |             |
+| **content_length** | **str**  |             | [optional] |
 
 ### Return type
 
@@ -264,10 +262,11 @@ Name | Type | Description  | Notes
  - **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Successful Response |  -  |
-**422** | Validation Error |  -  |
+| Status code | Description         | Response headers |
+| ----------- | ------------------- | ---------------- |
+| **200**     | Successful Response | -                |
+| **422**     | Validation Error    | -                |
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API Classes]](../README.md#documentation-for-api-classes) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+[Download as FilesApi.ipynb](md/code_samples/FilesApi.ipynb ':ignore')
