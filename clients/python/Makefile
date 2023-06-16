@@ -1,6 +1,6 @@
-include ../../scripts/common.Makefile
+PYTHON_DIR    := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-PYTHON_DIR    := $(CLIENTS_DIR)/python
+-include ../../scripts/common.Makefile
 
 .DEFAULT_GOAL := help
 SHELL         := /bin/bash
@@ -81,8 +81,12 @@ docs/md/code_samples/%.ipynb:docs/md/%.md
 
 ## DOCKER -------------------------------------------------------------------------------
 
+.env: .env-template ## creates .env file from defaults in .env-devel
+	$(if $(wildcard $@), \
+	@echo "WARNING #####  $< is newer than $@ ####"; diff -uN $@ $<; false;,\
+	@echo "WARNING ##### $@ does not exist, cloning $< as $@ ############"; cp $< $@)
 
-.PHONY: build
+.PHONY: image
 image: ## builds image $(APP_NAME):$(APP_VERSION)
 	docker build -f Dockerfile -t $(APP_NAME):$(APP_VERSION) $(CURDIR)
 
