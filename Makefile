@@ -46,4 +46,4 @@ endef
 .PHONY: http-doc
 http-doc: ## serves doc
 	# starting doc website
-	cd docs && python3 -m http.server 50001 --bind 127.0.0.1
+	python3 -m http.server 50001 --bind 127.0.0.1
