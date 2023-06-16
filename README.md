@@ -6,7 +6,6 @@ For the moment, we have to apply some changes manually until we use [templates](
 
 - update OAS -> ``api/openapi.json``
 - generate client ``make python-client``
-- Apply patches to the code (SEE ``PATCH ---`` marks in code)
 - md doc files
   - format all md?
   - replace 'YOUR_USERNAME' by 'YOUR_API_KEY_HERE'
