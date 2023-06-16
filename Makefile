@@ -4,7 +4,7 @@ VCS_URL       := $(shell git config --get remote.origin.url)
 VCS_REF       := $(shell git rev-parse --short HEAD)
 NOW_TIMESTAMP := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 APP_NAME      := $(notdir $(CURDIR))
-APP_VERSION   := $(shell python setup.py --version)
+APP_VERSION   := $(shell python $(CURDIR)/clients/python/setup.py --version)
 
 REPO_BASE_DIR := $(shell git rev-parse --show-toplevel)
 SCRIPTS_DIR   := $(abspath $(REPO_BASE_DIR)/scripts)
@@ -25,11 +25,11 @@ info: ## general informatino
 	@which python
 	@pip list
 	# package
-	-@echo ' name         : ' $(shell python ${CURDIR}/setup.py --name)
-	-@echo ' version      : ' $(shell python ${CURDIR}/setup.py --version)
+	-@echo ' name         : ' $(shell python ${CURDIR}/clients/python/setup.py --name)
+	-@echo ' version      : ' $(shell python ${CURDIR}/clients/python/setup.py --version)
 	# API
-	@echo  ' title        : ' $(shell jq ".info.title" ${CURDIR}/api/openapi.json)
-	@echo  ' version      : ' $(shell jq ".info.version" ${CURDIR}/api/openapi.json)
+	@echo  ' title        : ' $(shell python $(SCRIPTS_DIR)/get_json_entry.py info.title ${CURDIR}/api/openapi.json)
+	@echo  ' version      : ' $(shell python $(SCRIPTS_DIR)/get_json_entry.py info.version ${CURDIR}/api/openapi.json)
 	# nox
 	@echo nox --list-session
 

@@ -1,7 +1,7 @@
 ARG PYTHON_VERSION="3.6.10"
 FROM python:${PYTHON_VERSION}-slim-buster as base
 
-RUN apt-get -y update 
+RUN apt-get -y update
 RUN apt-get -y install \
     git \
     make

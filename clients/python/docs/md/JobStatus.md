@@ -11,5 +11,3 @@
 | **stopped_at**   | **datetime**                    | Timestamp at which the solver finished or killed execution or None if the event did not occur     | [optional]                |
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API Classes]](../README.md#documentation-for-api-classes) [[Back to README]](../README.md)
-
-

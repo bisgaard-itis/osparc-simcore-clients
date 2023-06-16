@@ -8,7 +8,7 @@ NAME = "osparc"
 VERSION = "0.5.0"
 API_VERSION = "0.4.0"
 REQUIRES = ["urllib3 >= 1.26.4", "six >= 1.10", "certifi", "python-dateutil"]
-README = Path("README.md").read_text()
+README = (Path(__file__).parent / 'README.md').read_text()
 
 setup(
     name=NAME,
