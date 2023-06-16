@@ -8,6 +8,7 @@ APP_VERSION   := $(shell python $(CURDIR)/clients/python/setup.py --version)
 
 REPO_BASE_DIR := $(shell git rev-parse --show-toplevel)
 SCRIPTS_DIR   := $(abspath $(REPO_BASE_DIR)/scripts)
+PYTHON_DIR    := $(abspath $(REPO_BASE_DIR)/clients/python)
 
 
 help: ## help on rule's targets
@@ -15,7 +16,7 @@ help: ## help on rule's targets
 
 
 .PHONY: info
-info: ## general informatino
+info: ## general information
 	# system
 	@echo ' CURDIR           : ${CURDIR}'
 	@echo ' NOW_TIMESTAMP    : ${NOW_TIMESTAMP}'
@@ -76,13 +77,13 @@ install-dev: _check_venv_active ## install package for development
 
 .PHONY: pylint
 pylint: _check_venv_active ## runs linter (only to check errors. SEE .pylintrc enabled)
-	pylint --rcfile "$(CURDIR)/.pylintrc" -v "$(CURDIR)/osparc" -v "$(CURDIR)/tests"
+	pylint --rcfile "$(PYTHON_DIR)/.pylintrc" -v "$(PYTHON_DIR)/osparc" -v "$(PYTHON_DIR)/tests"
 
 
 .PHONY: test-dev
 test-dev: _check_venv_active ## runs tests during development
 	# runs tests for development (e.g w/ pdb)
-	pytest -vv --exitfirst --failed-first --durations=10 --pdb $(CURDIR)
+	pytest -vv --exitfirst --failed-first --durations=10 --pdb $(PYTHON_DIR)
 
 
 
