@@ -52,26 +52,6 @@ test-dev: _check_venv_active ## runs tests during development
 	# runs tests for development (e.g w/ pdb)
 	pytest -vv --exitfirst --failed-first --durations=10 --pdb $(PYTHON_DIR)
 
-
-
-## VERSION -------------------------------------------------------------------------------
-
-.PHONY: version-patch version-minor version-major
-
-version-patch: ## commits version with bug fixes (use tag=1 to release)
-	$(_bumpversion)
-version-minor: ## commits version with backwards-compatible API addition or changes (use tag=1 to release)
-	$(_bumpversion)
-version-major: ## commits version with backwards-INcompatible addition or changes (use tag=1 to release)
-	$(_bumpversion)
-
-define _bumpversion
-	# upgrades as $(subst version-,,$@) version, commits and tags
-	@bump2version --verbose --list $(if $(tag),--tag,) $(subst version-,,$@)
-endef
-
-
-
 .PHONY: dist
 dist: ## builds distribution wheel
 	# installs pypa/build
@@ -80,9 +60,7 @@ dist: ## builds distribution wheel
 	python -m build --sdist --wheel --outdir dist/ $(CURDIR)
 
 
-
 ## DOCUMENTATION ------------------------------------------------------------------------
-
 .PHONY: http-doc
 http-doc: ## serves doc
 	# starting doc website

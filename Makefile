@@ -24,3 +24,26 @@ devenv: .venv ## create a python virtual environment with dev tools (e.g. linter
 	# Installing pre-commit hooks in current .git repo
 	@$</bin/pre-commit install
 	@echo "To activate the venv, execute 'source .venv/bin/activate'"
+
+
+## VERSION -------------------------------------------------------------------------------
+
+.PHONY: version-patch version-minor version-major
+
+version-patch: ## commits version with bug fixes (use tag=1 to release)
+	$(_bumpversion)
+version-minor: ## commits version with backwards-compatible API addition or changes (use tag=1 to release)
+	$(_bumpversion)
+version-major: ## commits version with backwards-INcompatible addition or changes (use tag=1 to release)
+	$(_bumpversion)
+
+define _bumpversion
+	# upgrades as $(subst version-,,$@) version, commits and tags
+	@bump2version --verbose --list $(if $(tag),--tag,) $(subst version-,,$@)
+endef
+
+## DOCUMENTATION ------------------------------------------------------------------------
+.PHONY: http-doc
+http-doc: ## serves doc
+	# starting doc website
+	cd docs && python3 -m http.server 50001 --bind 127.0.0.1
