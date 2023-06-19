@@ -14,6 +14,13 @@ OPENAPI_GENERATOR_IMAGE := $(OPENAPI_GENERATOR_NAME):$(OPENAPI_GENERATOR_TAG)
 REL_API_JSON_PATH       := api/openapi.json
 ABS_API_JSON_PATH       := $(API_DIR)/$(REL_API_JSON_PATH)
 
+SHELL         := /bin/bash
+VCS_URL       := $(shell git config --get remote.origin.url)
+VCS_REF       := $(shell git rev-parse --short HEAD)
+NOW_TIMESTAMP := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+APP_NAME      := $(notdir $(CURDIR))
+APP_VERSION   := $(shell python $(CLIENTS_DIR)/python/setup.py --version)
+
 GIT_USER_ID := ITISFoundation
 GIT_CLIENT_REPO_ID := osparc-simcore-clients
 GIT_OPENAPI_REPO_ID := openapi-generator

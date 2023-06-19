@@ -1,5 +1,5 @@
 -include ../../scripts/common.Makefile
-PYTHON_DIR := $(SCRIPTS_DIR)/python
+PYTHON_DIR := $(CLIENTS_DIR)/python
 
 ## PYTHON DEVELOPMENT  ------------------------------------------------------------------
 

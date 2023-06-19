@@ -1,12 +1,6 @@
 include ./scripts/common.Makefile
 
 PYTHON_DIR    := $(CLIENTS_DIR)/python
-SHELL         := /bin/bash
-VCS_URL       := $(shell git config --get remote.origin.url)
-VCS_REF       := $(shell git rev-parse --short HEAD)
-NOW_TIMESTAMP := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-APP_NAME      := $(notdir $(CURDIR))
-APP_VERSION   := $(shell python $(PYTHON_DIR)/setup.py --version)
 
 .PHONY: info
 info: ## general information
