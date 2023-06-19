@@ -1,6 +1,6 @@
 include ./scripts/common.Makefile
 
-PYTHON_DIR    := $(SCRIPTS_DIR)/python
+PYTHON_DIR    := $(CLIENTS_DIR)/python
 SHELL         := /bin/bash
 VCS_URL       := $(shell git config --get remote.origin.url)
 VCS_REF       := $(shell git rev-parse --short HEAD)
@@ -40,7 +40,7 @@ info: ## general information
 
 .PHONY: devenv
 devenv: .venv ## create a python virtual environment with dev tools (e.g. linters, etc)
-	$</bin/pip3 --quiet install -r requirements-dev.txt
+	# $</bin/pip3 --quiet install -r requirements-dev.txt
 	# Installing pre-commit hooks in current .git repo
 	@$</bin/pre-commit install
 	@echo "To activate the venv, execute 'source .venv/bin/activate'"
