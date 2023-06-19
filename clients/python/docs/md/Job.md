@@ -13,5 +13,3 @@
 | **outputs_url**     | **str**      | Link to the job outputs (sub-collection          |
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API Classes]](../README.md#documentation-for-api-classes) [[Back to README]](../README.md)
-
-

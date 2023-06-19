@@ -1,5 +1,3 @@
--c requirements-tests.txt
-
 black
 bump2version
 isort

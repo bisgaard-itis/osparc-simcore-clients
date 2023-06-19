@@ -153,7 +153,7 @@ with osparc.ApiClient(cfg) as api_client:
     # 2022-06-01T18:15:00.421279969+02:00 User : uid=0(root) gid=0(root) groups=0(root)
     # 2022-06-01T18:15:00.421560331+02:00 Workdir : /home/scu
     # ...
-    # 2022-06-01T18:15:00.864550043+02:00 
+    # 2022-06-01T18:15:00.864550043+02:00
     # 2022-06-01T18:15:03.923876794+02:00 Will sleep for 3 seconds
     # 2022-06-01T18:15:03.924473521+02:00 [PROGRESS] 1/3...
     # 2022-06-01T18:15:03.925021846+02:00 Remaining sleep time 0.9999995231628418
@@ -326,6 +326,6 @@ with ZipFile(f"{zip_path}") as fzip:
 - [osparc API] documentation
 - A full script with this tutorial: [``sleeper.py``](https://github.com/ITISFoundation/osparc-simcore/blob/master/tests/public-api/examples/sleeper.py)
 
-[osparc API python client]:https://itisfoundation.github.io/osparc-simcore-python-client
+[osparc API python client]:https://itisfoundation.github.io/osparc-simcore-clients
 [osparc API]:https://api.osparc.io/doc
 [Download as BasicTutorial.ipynb](md/code_samples/tutorials/BasicTutorial.ipynb ':ignore')

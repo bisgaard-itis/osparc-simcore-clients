@@ -1,48 +1,42 @@
-# Python client for osparc-simcore API
+# NOTES
 
-![test](https://github.com/ITISFoundation/osparc-simcore-python-client/workflows/test/badge.svg)
-[![PyPI](https://img.shields.io/pypi/v/osparc)](https://pypi.org/project/osparc/)
-[![](https://img.shields.io/pypi/status/osparc)](https://pypi.org/project/osparc/)
-[![](https://img.shields.io/pypi/l/osparc)](https://pypi.org/project/osparc/)
+For the moment, we have to apply some changes manually until we use [templates](https://openapi-generator.tech/docs/templating) or [customization](https://openapi-generator.tech/docs/customization)
 
+### Workflow
 
-Python client for osparc-simcore public web API
-
-- API version: 0.4.0
-- Package version: 0.5.0
-- Build package: org.openapitools.codegen.languages.PythonClientCodegen
-- Requirements: Python 3.6+
-
-## Installation & Usage
-
-Install the [latest release](https://github.com/ITISFoundation/osparc-simcore-python-client/releases) with
-
-```sh
-pip install osparc
-```
-or directly from the repository (edge version)
-```sh
-pip install git+https://github.com/ITISFoundation/osparc-simcore-python-client.git
-```
-
-Then import the package:
-
-```python
-import osparc
-print(osparc.__version__)
-```
-
-## Documentation
-
-- [Getting Started](https://itisfoundation.github.io/osparc-simcore-python-client/#/?id=getting-started)
-- [Tutorial](https://itisfoundation.github.io/osparc-simcore-python-client/#/md/tutorials/BasicTutorial)
-- [Manual](https://itisfoundation.github.io/osparc-simcore-python-client)
-- [osparc.io manual](https://docs.osparc.io/#/)
-- [OpenAPI Specifications](https://api.osparc.io/dev/doc)
-- [Packages in Pypi](https://pypi.org/project/osparc/)
+- update OAS -> ``api/openapi.json``
+- generate client ``make python-client``
+- md doc files
+  - format all md?
+  - replace 'YOUR_USERNAME' by 'YOUR_API_KEY_HERE'
+  - replace 'YOUR_PASSWORD' by 'YOUR_API_SECRET_HERE'
+  - replace 'http://localhost' by 'https://api.osparc.io'
+  - replace ``:\n`` -> ``:\n\n`` after titles. Otherwise it docsify fails to render it correctly
+  - move all to docs/md
+  - update README.md
+    - remove generator entry (since some custom changes)
+    - from '## Documentation for API Endpoints' to '## Author'
+    - ``Documentation for API Classes`` instead of ``Documentation for API Endpoints``
+          - ``Back to API list`` to ``Back to API Classes``
+    - ``## Author`` also is different in md/README.md
+  - remove ```# Defining host is optional and default to https://api.osparc.io
+configuration.host = "https://api.osparc.io"```
+  - Updates notebooks: ``make notebooks``
+    - Apply fixes to ``BasicTutorial.ipynb``  as in https://github.com/ITISFoundation/osparc-simcore-clients/pull/35
 
 
 
-<p align="center">
-<image src="https://github.com/ITISFoundation/osparc-simcore-python-client/blob/4e8b18494f3191d55f6692a6a605818aeeb83f95/docs/_media/mwl.png" alt="Made with love at www.z43.swiss" width="20%" />
-</p>
+----
+
+# @channel :tada:  Released new ``osparc==0.5.0`` python client library
+
+## Highlights:
+
+- ✨ adds ``SolverApi.get_job_output_logfile`` to download logfile after a job run (#27)
+- Checkout updated [doc](https://itisfoundation.github.io/osparc-simcore-clients) and [tutorial](https://itisfoundation.github.io/osparc-simcore-clients/#/md/tutorials/BasicTutorial?id=basic-tutorial)
+- Do you to want to report a bug, have a request or a question about ``osparc`` library? Drop it [in our issue tracker](https://github.com/ITISFoundation/osparc-simcore-clients/issues/new/choose)
+
+## More details
+- [Release Notes](https://github.com/ITISFoundation/osparc-simcore-clients/releases)
+- [Documentation](https://itisfoundation.github.io/osparc-simcore-clients)
+- [Repository](https://github.com/ITISFoundation/osparc-simcore-clients)
