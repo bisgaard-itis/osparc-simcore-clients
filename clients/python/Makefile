@@ -44,7 +44,7 @@ install-dev: _check_venv_active ## install package for development
 
 .PHONY: pylint
 pylint: _check_venv_active ## runs linter (only to check errors. SEE .pylintrc enabled)
-	pylint --rcfile "$(PYTHON_DIR)/.pylintrc" -v "$(PYTHON_DIR)/osparc" -v "$(PYTHON_DIR)/tests"
+	pylint --rcfile "$(PYTHON_DIR)/.pylintrc" -v "$(PYTHON_DIR)/osparc" -v "$(PYTHON_DIR)/test"
 
 
 .PHONY: test-dev
@@ -92,7 +92,7 @@ image: ## builds image $(APP_NAME):$(APP_VERSION)
 
 .PHONY: shell
 shell: ## runs container and opens bash shell
-	docker run -it $(APP_NAME):latest /bin/bash
+	docker run -it $(APP_NAME):$(APP_VERSION) /bin/bash
 
 
 
