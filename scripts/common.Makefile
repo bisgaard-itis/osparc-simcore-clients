@@ -1,6 +1,8 @@
 # Globals to be included into all Makefiles
 # specification of the used openapi-generator-cli (see also https://github.com/ITISFoundation/openapi-generator)
 
+.DEFAULT_GOAL := help
+
 REPO_ROOT               := $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/..)
 SCRIPTS_DIR             := $(REPO_ROOT)/scripts
 CLIENTS_DIR             := $(REPO_ROOT)/clients

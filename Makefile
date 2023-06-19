@@ -1,6 +1,32 @@
 include ./scripts/common.Makefile
 
-.PHONY: devenv
+PYTHON_DIR    := $(SCRIPTS_DIR)/python
+SHELL         := /bin/bash
+VCS_URL       := $(shell git config --get remote.origin.url)
+VCS_REF       := $(shell git rev-parse --short HEAD)
+NOW_TIMESTAMP := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+APP_NAME      := $(notdir $(CURDIR))
+APP_VERSION   := $(shell python $(PYTHON_DIR)/setup.py --version)
+
+.PHONY: info
+info: ## general information
+	# system
+	@echo ' CURDIR           : ${CURDIR}'
+	@echo ' NOW_TIMESTAMP    : ${NOW_TIMESTAMP}'
+	@echo ' VCS_URL          : ${VCS_URL}'
+	@echo ' VCS_REF          : ${VCS_REF}'
+	# installed in .venv
+	@which python
+	@pip list
+	# package
+	-@echo ' name         : ' $(shell python $(PYTHON_DIR)/setup.py --name)
+	-@echo ' version      : ' $(shell python $(PYTHON_DIR)/setup.py --version)
+	# API
+	@echo  ' title        : ' $(shell python $(SCRIPTS_DIR)/get_json_entry.py info.title $(REPO_ROOT)/api/openapi.json)
+	@echo  ' version      : ' $(shell python $(SCRIPTS_DIR)/get_json_entry.py info.version $(REPO_ROOT)/api/openapi.json)
+	# nox
+	@echo nox --list-session
+
 
 .venv:
 	@python3 --version
@@ -12,6 +38,7 @@ include ./scripts/common.Makefile
 		setuptools
 	@$@/bin/pip3 list --verbose
 
+.PHONY: devenv
 devenv: .venv ## create a python virtual environment with dev tools (e.g. linters, etc)
 	$</bin/pip3 --quiet install -r requirements-dev.txt
 	# Installing pre-commit hooks in current .git repo
@@ -22,7 +49,6 @@ devenv: .venv ## create a python virtual environment with dev tools (e.g. linter
 ## VERSION -------------------------------------------------------------------------------
 
 .PHONY: version-patch version-minor version-major
-
 version-patch: ## commits version with bug fixes (use tag=1 to release)
 	$(_bumpversion)
 version-minor: ## commits version with backwards-compatible API addition or changes (use tag=1 to release)
@@ -41,3 +67,23 @@ http-doc: ## serves doc
 	# starting doc website
 	@echo "Check site on http://127.0.0.1:50001/"
 	python3 -m http.server 50001 --bind 127.0.0.1
+
+## CLEAN -------------------------------------------------------------------------------
+
+
+.PHONY: clean-hooks
+clean-hooks: ## Uninstalls git pre-commit hooks
+	@-pre-commit uninstall 2> /dev/null || rm .git/hooks/pre-commit
+
+_git_clean_args := -dx --force --exclude=.vscode --exclude=TODO.md --exclude=.venv --exclude=.python-version --exclude="*keep*"
+
+
+.check-clean:
+	@git clean -n $(_git_clean_args)
+	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
+	@echo -n "$(shell whoami), are you REALLY sure? [y/N] " && read ans && [ $${ans:-N} = y ]
+
+
+clean: .check-clean ## cleans all unversioned files in project and temp files create by this makefile
+	# Cleaning unversioned
+	@git clean $(_git_clean_args)
