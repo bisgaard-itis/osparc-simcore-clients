@@ -6,20 +6,21 @@
 REPO_ROOT               := $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/..)
 SCRIPTS_DIR             := $(REPO_ROOT)/scripts
 CLIENTS_DIR             := $(REPO_ROOT)/clients
-
-OPENAPI_GENERATOR_NAME  := itisfoundation/openapi-generator-cli-openapi-generator-v4.2.3
-OPENAPI_GENERATOR_TAG   := v0
-OPENAPI_GENERATOR_IMAGE := $(OPENAPI_GENERATOR_NAME):$(OPENAPI_GENERATOR_TAG)
-
-REL_API_JSON_PATH       := api/openapi.json
-ABS_API_JSON_PATH       := $(API_DIR)/$(REL_API_JSON_PATH)
-
 SHELL         := /bin/bash
 VCS_URL       := $(shell git config --get remote.origin.url)
 VCS_REF       := $(shell git rev-parse --short HEAD)
 NOW_TIMESTAMP := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 APP_NAME      := $(notdir $(CURDIR))
 APP_VERSION   := $(shell python $(CLIENTS_DIR)/python/setup.py --version)
+
+# Specify which openapi generator should be used to generate the clients in this repo
+OPENAPI_GENERATOR_NAME  := itisfoundation/openapi-generator-cli-openapi-generator-v4.2.3
+OPENAPI_GENERATOR_TAG   := v0
+OPENAPI_GENERATOR_IMAGE := $(OPENAPI_GENERATOR_NAME):$(OPENAPI_GENERATOR_TAG)
+
+# openapi specification
+REL_API_JSON_PATH       := api/openapi.json
+ABS_API_JSON_PATH       := $(API_DIR)/$(REL_API_JSON_PATH)
 
 GIT_USER_ID := ITISFoundation
 GIT_CLIENT_REPO_ID := osparc-simcore-clients
