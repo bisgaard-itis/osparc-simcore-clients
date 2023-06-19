@@ -2,13 +2,6 @@ include ./scripts/common.Makefile
 
 .PHONY: devenv
 
-.env: .env-template ## creates .env file from defaults in .env-devel
-	$(if $(wildcard $@), \
-	@echo "WARNING #####  $< is newer than $@ ####"; diff -uN $@ $<; false;,\
-	@echo "WARNING ##### $@ does not exist, cloning $< as $@ ############"; cp $< $@)
-
-
-
 .venv:
 	@python3 --version
 	python3 -m venv $@
@@ -46,4 +39,5 @@ endef
 .PHONY: http-doc
 http-doc: ## serves doc
 	# starting doc website
+	@echo "Check site on http://127.0.0.1:50001/"
 	python3 -m http.server 50001 --bind 127.0.0.1

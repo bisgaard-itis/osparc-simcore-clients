@@ -1,1 +1,1 @@
--c clients/python/requirements-dev.txt
+-r clients/python/requirements-dev.txt
