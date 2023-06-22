@@ -1,5 +1,84 @@
 -include ../../scripts/common.Makefile
 PYTHON_DIR := $(CLIENTS_DIR)/python
+GENERATED_PY_CLIENT_DIR := $(PYTHON_DIR)/auto_generated_client
+CONTAINER_API_JSON   := /local/$(REL_API_JSON_PATH)
+GENERATOR            := python
+UID                  := $(shell id -u)
+
+setup_client_dir:
+	-rm -rf $(GENERATED_PY_CLIENT_DIR)
+	mkdir $(GENERATED_PY_CLIENT_DIR)
+
+# Generation of Python client
+.PHONY: python-client
+python-client: validate-api-specification setup_client_dir## generate python client
+	docker run --rm --user $(UID):$(UID)\
+			--volume "$(REPO_ROOT):/local" \
+			$(OPENAPI_GENERATOR_IMAGE) generate \
+			--generator-name=$(GENERATOR) \
+			--git-user-id=$(GIT_USER_ID) \
+			--git-repo-id=$(GIT_CLIENT_REPO_ID) \
+			--http-user-agent="osparc-api/$(APP_VERSION)/python" \
+			--input-spec=$(CONTAINER_API_JSON) \
+			--output=/local/clients/python/auto_generated_client \
+			--additional-properties=$(subst $(space),$(comma),$(strip $(ADDITIONAL_PROPS))) \
+			--package-name=osparc \
+			--release-note="Updated to $(APP_VERSION)"
+
+.PHONY: python-client-from-templates
+python-client-from-templates: validate-api-specification setup_client_dir## generate python client using templates in a specified directory (usage: 'make python-client-from-templates path/to/templates')
+	$(eval TEMPLATE_DIR := $(word 2, $(MAKECMDGOALS)))
+	@echo "Using template-dir: $(TEMPLATE_DIR)"
+	@docker run --rm --user $(UID):$(UID)\
+			--volume "$(REPO_ROOT):/local" \
+			--volume "$(TEMPLATE_DIR):/tmp/templates" \
+			$(OPENAPI_GENERATOR_IMAGE) generate \
+			--generator-name=$(GENERATOR) \
+			--git-user-id=$(GIT_USER_ID) \
+			--git-repo-id=$(GIT_CLIENT_REPO_ID) \
+			--http-user-agent="osparc-api/$(APP_VERSION)/python" \
+			--input-spec=$(CONTAINER_API_JSON) \
+			--output=/local/clients/python/auto_generated_client \
+			--additional-properties=$(subst $(space),$(comma),$(strip $(ADDITIONAL_PROPS))) \
+			--package-name=osparc \
+			--release-note="Updated to $(APP_VERSION)" \
+			--template-dir=/tmp/templates
+
+.PHONY: generator-help
+generator-help: ## help on client-api generator
+	# generate help
+	@docker run --rm $(OPENAPI_GENERATOR_IMAGE) help generate
+
+## Tools for "postprocessing" generated documentation --------------------------------------------
+
+
+_copy-docs: ## Replace git tracked docs in clients/python/docs/md by the automatically generated docs (N.B. check that the docs make sense before commiting into git)
+	@-rm -r $(PYTHON_DIR)/docs/auto_generated_docs
+	@mkdir $(PYTHON_DIR)/docs/auto_generated_docs
+	@mkdir $(PYTHON_DIR)/docs/auto_generated_docs/docs
+	@mkdir $(PYTHON_DIR)/docs/auto_generated_docs/code_samples
+	@cp $(PYTHON_DIR)/auto_generated_client/README.md $(PYTHON_DIR)/docs/auto_generated_docs/README.md
+	@cp $(PYTHON_DIR)/auto_generated_client/docs/* $(PYTHON_DIR)/docs/auto_generated_docs/docs
+
+.PHONY: _copy-tests
+_copy-tests: ## Replace git tracked tests clients/python/test by the automatically generated docs (N.B. check that the docs make sense before commiting into git)
+	@-rm -r $(PYTHON_DIR)/test
+	@mkdir $(PYTHON_DIR)/test
+	@cp $(PYTHON_DIR)/auto_generated_client/test/* $(PYTHON_DIR)/test/
+
+markdowns  = $(wildcard docs/auto_generated_docs/docs/*Api.md)
+outputs:=$(subst docs/auto_generated_docs/docs,docs/auto_generated_docs/code_samples,$(markdowns:.md=.ipynb))
+
+.PHONY: postprocess-generated-files
+postprocess-generated-files: _copy-docs $(outputs) ## converts selected markdowns into notebooks
+
+docs/auto_generated_docs/code_samples/%.ipynb:docs/auto_generated_docs/docs/%.md
+	# Removing link in markdown
+	@sed -i "/\b$(notdir $@)\b/d" $<
+	notedown $< >$@
+	# Appending link to markdown
+	@echo "[Download as $(notdir $@)]($(subst docs/auto_generated_docs/,clients/python/docs/auto_generated_docs/,$@) \":ignore title\")" >> $<
+
 
 ## PYTHON DEVELOPMENT  ------------------------------------------------------------------
 
@@ -8,20 +87,24 @@ _check_venv_active:
 	@python3 -c "import sys; assert sys.base_prefix!=sys.prefix"
 
 .PHONY: install-dev
-install-dev: _check_venv_active ## install package for development
-	pip install -r requirements-tests.txt
-	pip install -e .
+install-dev: _check_venv_active ## install packages for development
+	pip install -r requirements/dev.txt
+
+.PHONY: install-test
+install-test: _check_venv_active install-dev ## install packages for testing client
+	pip install -r auto_generated_client/test-requirements.txt
+	pip install -e auto_generated_client/
 
 
 .PHONY: pylint
 pylint: _check_venv_active ## runs linter (only to check errors. SEE .pylintrc enabled)
-	pylint --rcfile "$(PYTHON_DIR)/.pylintrc" -v "$(PYTHON_DIR)/osparc" -v "$(PYTHON_DIR)/test"
+	pylint --rcfile "$(PYTHON_DIR)/.pylintrc" -v "$(PYTHON_DIR)/auto_generated_client"
 
 
 .PHONY: test-dev
 test-dev: _check_venv_active ## runs tests during development
 	# runs tests for development (e.g w/ pdb)
-	pytest -vv --exitfirst --failed-first --durations=10 --pdb $(PYTHON_DIR)
+	pytest -vv --exitfirst --failed-first --durations=10 --pdb --ignore=$(PYTHON_DIR)/auto_generated_client $(PYTHON_DIR)
 
 .PHONY: dist
 dist: ## builds distribution wheel
@@ -29,25 +112,6 @@ dist: ## builds distribution wheel
 	python -m pip install build
     # Build a binary wheel and a source tarball
 	python -m build --sdist --wheel --outdir dist/ $(CURDIR)
-
-
-## DOCUMENTATION ------------------------------------------------------------------------
-
-.PHONY: notebooks
-
-markdowns  = $(wildcard docs/md/*Api.md)
-markdowns += $(wildcard docs/md/tutorials/*.md)
-outputs:=$(subst docs/md,docs/md/code_samples,$(markdowns:.md=.ipynb))
-
-notebooks: $(outputs) ## converts selected markdowns into notebooks
-
-docs/md/code_samples/%.ipynb:docs/md/%.md
-	# Removing link in markdown
-	@sed -i "/\b$(notdir $@)\b/d" $<
-	notedown $< >$@
-	# Appending link to markdown
-	@echo "[Download as $(notdir $@)]($(subst docs/,,$@) ':ignore')" >> $<
-
 
 
 ## DOCKER -------------------------------------------------------------------------------

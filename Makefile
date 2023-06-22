@@ -12,9 +12,6 @@ info: ## general information
 	# installed in .venv
 	@which python
 	@pip list
-	# package
-	-@echo ' name         : ' $(shell python $(PYTHON_DIR)/setup.py --name)
-	-@echo ' version      : ' $(shell python $(PYTHON_DIR)/setup.py --version)
 	# API
 	@echo  ' title        : ' $(shell python $(SCRIPTS_DIR)/get_json_entry.py info.title $(REPO_ROOT)/api/openapi.json)
 	@echo  ' version      : ' $(shell python $(SCRIPTS_DIR)/get_json_entry.py info.version $(REPO_ROOT)/api/openapi.json)
@@ -34,7 +31,7 @@ info: ## general information
 
 .PHONY: devenv
 devenv: .venv ## create a python virtual environment with dev tools (e.g. linters, etc)
-	# $</bin/pip3 --quiet install -r requirements-dev.txt
+	$</bin/pip3 --quiet install -r requirements.txt
 	# Installing pre-commit hooks in current .git repo
 	@$</bin/pre-commit install
 	@echo "To activate the venv, execute 'source .venv/bin/activate'"
