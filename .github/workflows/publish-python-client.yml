@@ -1,13 +1,6 @@
 name: publish-and-test-python-client
 on:
   workflow_dispatch:
-    inputs:
-      repo:
-        description: "Repository where openapi-json was generated"
-        default: "ITISFoundation/osparc-simcore-clients"
-      run_id:
-        description: "Run ID of the workflow which generated openapi.json as an artifact"
-        required: true
   push:
   pull_request:
     types:
@@ -29,18 +22,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Download open api json
-        if: github.event_name == 'workflow_dispatch'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          rm ./api/openapi.json
-          gh run download ${{ github.event.inputs.run_id }}  --repo=${{ github.event.inputs.repo }} --dir ./api
-          if [ ! -e "./api/openapi.json" ]; then
-            echo "Could not correctly download openapi.json"
-            ls ./api
-            exit 1
-          fi
       - name: Generate client
         run: |
           git status
