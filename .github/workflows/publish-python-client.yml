@@ -1,0 +1,155 @@
+name: publish-and-test-python-client
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Repository where openapi-json was generated"
+        default: "ITISFoundation/osparc-simcore-clients"
+      run_id:
+        description: "Run ID of the workflow which generated openapi.json as an artifact"
+        required: true
+  push:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+      - review_requested
+jobs:
+  build-n-publish:
+    runs-on: ubuntu-latest
+    outputs:
+      wheel: ${{ steps.find-wheel.outputs.osparc-wheel-path }}
+      dist-dir: ${{ steps.find-wheel.outputs.osparc-auto-wheel-dir }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.client_payload.ref }}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Download open api json
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm ./api/openapi.json
+          gh run download ${{ github.event.inputs.run_id }}  --repo=${{ github.event.inputs.repo }} --dir ./api
+          if [ ! -e "./api/openapi.json" ]; then
+            echo "Could not correctly download openapi.json"
+            ls ./api
+            exit 1
+          fi
+      - name: Generate client
+        run: |
+          git status
+          make devenv
+          source .venv/bin/activate
+          cd clients/python
+          make install-dev
+          make dist-ci
+      - name: Determine wheel artifact
+        id: find-wheel
+        run: |
+          OSPARC_WHEEL=$(ls clients/python/artifacts/dist/osparc-*.whl)
+          OSPARC_AUTO_GENERATED_WHEEL=$(ls clients/python/artifacts/dist/osparc_client*.whl)
+          echo "osparc-wheel-path=${OSPARC_WHEEL}" >> $GITHUB_OUTPUT
+          echo "osparc-wheel-dir=$(dirname ${OSPARC_WHEEL})" >> $GITHUB_OUTPUT
+          echo "osparc-wheel-name=$(basename ${OSPARC_WHEEL})" >> $GITHUB_OUTPUT
+          echo "osparc-auto-wheel-path=${OSPARC_AUTO_GENERATED_WHEEL}" >> $GITHUB_OUTPUT
+          echo "osparc-auto-wheel-dir=$(dirname ${OSPARC_AUTO_GENERATED_WHEEL})" >> $GITHUB_OUTPUT
+          echo "osparc-auto-wheel-name=$(basename ${OSPARC_AUTO_GENERATED_WHEEL})" >> $GITHUB_OUTPUT
+      - name: Upload wheels
+        uses: actions/upload-artifact@v3
+        with:
+          name: osparc_python_wheels
+          path: clients/python/artifacts/dist/
+      - name: Publish package to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        with:
+          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          repository-url: https://test.pypi.org/legacy/
+          verbose: true
+          packages-dir: ${{ steps.find-wheel.outputs.wheel-dir }}
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
+          verbose: true
+          packages-dir: ${{ steps.find-wheel.outputs.wheel-dir }}
+
+  test-20-04:
+    name: python ${{ matrix.python-version }} ubuntu-20.04
+    runs-on: ubuntu-20.04
+    needs: build-n-publish
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.client_payload.ref }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Pip cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-{{ matrix.python-version }}
+          restore-keys: |
+            ${{ runner.os }}-pip
+      - name: Donwload client
+        uses: actions/download-artifact@v3
+        with:
+          name: osparc_python_wheels
+          path: clients/python/artifacts/dist/
+      - name: Install and Test
+        run: |
+          make devenv
+          source .venv/bin/activate
+          python -m pip install pytest
+          python -m pip install ${{needs.build-n-publish.outputs.wheel}} --find-links=${{needs.build-n-publish.outputs.dist-dir}}
+          cd clients/python
+          pytest -v --ignore=/artifacts/client
+
+  test-latest:
+    name: python ${{ matrix.python-version }} ubuntu-latest
+    runs-on: ubuntu-latest
+    needs: build-n-publish
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Pip cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-{{ matrix.python-version }}
+          restore-keys: |
+            ${{ runner.os }}-pip
+      - name: Donwload client
+        uses: actions/download-artifact@v3
+        with:
+          name: osparc_python_wheels
+          path: clients/python/artifacts/dist/
+      - name: Install and Test
+        run: |
+          make devenv
+          source .venv/bin/activate
+          python -m pip install pytest
+          python -m pip install ${{needs.build-n-publish.outputs.wheel}} --find-links=${{needs.build-n-publish.outputs.dist-dir}}
+          cd clients/python
+          make install-test
+          pytest -v --ignore=/artifacts/client

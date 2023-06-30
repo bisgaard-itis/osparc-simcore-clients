@@ -23,8 +23,9 @@ python-client: validate-api-specification artifacts_dir ## generate python clien
 			--input-spec=$(CONTAINER_API_JSON) \
 			--output=/local/clients/python/artifacts/client \
 			--additional-properties=$(subst $(space),$(comma),$(strip $(ADDITIONAL_PROPS))) \
-			--package-name=osparc \
+			--package-name=osparc_client \
 			--release-note="Updated to $(APP_VERSION)"
+	black $(PYTHON_DIR)/artifacts/client/*.py
 
 .PHONY: python-client-from-templates
 python-client-from-templates: validate-api-specification artifacts_dir ## generate python client using templates in a specified directory (usage: 'make python-client-from-templates path/to/templates')
@@ -42,9 +43,10 @@ python-client-from-templates: validate-api-specification artifacts_dir ## genera
 			--input-spec=$(CONTAINER_API_JSON) \
 			--output=/local/clients/python/artifacts/client \
 			--additional-properties=$(subst $(space),$(comma),$(strip $(ADDITIONAL_PROPS))) \
-			--package-name=osparc \
+			--package-name=osparc_client \
 			--release-note="Updated to $(APP_VERSION)" \
 			--template-dir=/tmp/python_templates
+	black $(PYTHON_DIR)/artifacts/client/*.py
 
 .PHONY: generator-help
 generator-help: ## help on client-api generator
@@ -52,12 +54,6 @@ generator-help: ## help on client-api generator
 	@docker run --rm $(OPENAPI_GENERATOR_IMAGE) help generate
 
 ## Tools for "postprocessing" generated documentation --------------------------------------------
-
-.PHONY: _copy-tests
-_copy-tests: ## Replace git tracked tests clients/python/test by the automatically generated docs (N.B. check that the docs make sense before commiting into git)
-	@-rm -r $(PYTHON_DIR)/test
-	@mkdir $(PYTHON_DIR)/test
-	@cp $(ARTIFACTS_DIR)/client/test/* $(PYTHON_DIR)/test/
 
 .PHONY: postprocess-generated-docs
 postprocess-generated-docs:  ## converts selected markdowns into notebooks and adds them to the documentation
@@ -88,9 +84,7 @@ install-dev: _check_venv_active ## install packages for development
 
 .PHONY: install-test
 install-test: _check_venv_active install-dev ## install packages for testing client
-	pip install -r $(ARTIFACTS_DIR)/client/test-requirements.txt
-	pip install -e $(ARTIFACTS_DIR)/client/
-
+	pip install -r $(PYTHON_DIR)/requirements/test.txt
 
 .PHONY: pylint
 pylint: _check_venv_active ## runs linter (only to check errors. SEE .pylintrc enabled)
@@ -107,10 +101,23 @@ dist: artifacts_dir ## builds distribution wheel
 	# installs pypa/build
 	python -m pip install build
     # Build a binary wheel and a source tarball
-	python -m build --sdist --wheel --outdir $(ARTIFACTS_DIR)/dist/ $(ARTIFACTS_DIR)/client
+	python -m build --sdist --wheel $(ARTIFACTS_DIR)/client
+	@-mkdir $(PYTHON_DIR)/client/osparc/data/
+	@cp $(REPO_ROOT)/api/openapi.json $(PYTHON_DIR)/client/osparc/data/
+	python -m build --sdist --wheel $(PYTHON_DIR)/client
+	@-rm -rf $(ARTIFACTS_DIR)/dist
+	@mkdir $(ARTIFACTS_DIR)/dist
+	@cp $$(ls artifacts/client/dist/*.whl) $(ARTIFACTS_DIR)/dist
+	@cp $$(ls client/dist/*.whl) $(ARTIFACTS_DIR)/dist
+
 
 .PHONY: dist-ci
 dist-ci: python-client dist ## build wheel and tar ball in a single command
+
+.PHONY: build-n-install-osparc-dev
+build-n-install-osparc-dev: dist-ci ## install the built osparc package in editable mode
+	python -m pip install -e client/ --find-links=artifacts/dist
+
 
 ## DOCKER -------------------------------------------------------------------------------
 

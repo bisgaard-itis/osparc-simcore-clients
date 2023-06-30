@@ -1,0 +1,9 @@
+{
+  "reportInvalidStringEscapeSequence": false,
+    "include": [
+      "client/osparc",
+    ],
+    "exclude":[
+      "artifacts/client/osparc_client/test/*"
+    ]
+  }

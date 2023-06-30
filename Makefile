@@ -13,8 +13,8 @@ info: ## general information
 	@which python
 	@pip list
 	# API
-	@echo  ' title        : ' $(shell python $(SCRIPTS_DIR)/get_json_entry.py info.title $(REPO_ROOT)/api/openapi.json)
-	@echo  ' version      : ' $(shell python $(SCRIPTS_DIR)/get_json_entry.py info.version $(REPO_ROOT)/api/openapi.json)
+	@echo  ' title        : ' $(shell bash $(SCRIPTS_DIR)/jq.bash -r .info.title $(REPO_ROOT)/api/openapi.json)
+	@echo  ' version      : ' $(shell bash $(SCRIPTS_DIR)/jq.bash -r .info.version $(REPO_ROOT)/api/openapi.json)
 	# nox
 	@echo nox --list-session
 
@@ -24,7 +24,7 @@ info: ## general information
 	python3 -m venv $@
 	## upgrading tools to latest version in $(shell python3 --version)
 	$@/bin/pip3 --quiet install --upgrade \
-		pip~=22.0 \
+		pip \
 		wheel \
 		setuptools
 	@$@/bin/pip3 list --verbose
