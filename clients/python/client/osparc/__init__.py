@@ -24,7 +24,6 @@ from osparc_client import (
     Profile,
     ProfileUpdate,
     Solver,
-    TaskStates,
     UserRoleEnum,
     UsersGroup,
     ValidationError,
@@ -34,6 +33,8 @@ from osparc_client import (
     SolversApi,
     UsersApi
 )
+
+from osparc_client import RunningState as TaskStates
 
 __all__ = [
     # imports from osparc_client

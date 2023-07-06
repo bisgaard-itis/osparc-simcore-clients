@@ -48,6 +48,8 @@ class TestMeta(unittest.TestCase):
             return Meta(
                 name = '0',
                 version = '0.5.0',
+                docs_url = 'https://docs.osparc.io',
+                docs_dev_url = 'https://api.osparc.io/dev/docs'
         )
 
     def testMeta(self):
