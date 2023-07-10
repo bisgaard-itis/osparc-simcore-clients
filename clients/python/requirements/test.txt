@@ -2,3 +2,6 @@
 nox
 black
 pytest
+papermill
+ipython
+ipykernel

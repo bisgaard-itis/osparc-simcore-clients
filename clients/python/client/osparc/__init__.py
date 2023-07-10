@@ -31,7 +31,7 @@ from osparc_client import (
     FilesApi,
     MetaApi,
     SolversApi,
-    UsersApi
+    UsersApi,
 )
 
 from osparc_client import RunningState as TaskStates
@@ -69,5 +69,5 @@ __all__ = [
     "ApiKeyError",
     "ApiException",
     # imports from osparc
-    "openapi"
+    "openapi",
 ]
