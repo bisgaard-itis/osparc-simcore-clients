@@ -33,6 +33,22 @@ from osparc_client import (
     MetaApi,
     SolversApi,
     UsersApi,
+
+
+    StudiesApi,
+    OnePageSolverPort,
+    StudyPort,
+    Study,
+    LimitOffsetPageStudy,
+    LimitOffsetPageFile,
+    JobMetadataReplace,
+    LimitOffsetPageJob,
+    Links,
+    SolverPort,
+    JobMetadata,
+    LimitOffsetPageSolver,
+    ErrorGet,
+    OnePageStudyPort,
 )
 
 from osparc_client import RunningState as TaskStates
@@ -67,6 +83,20 @@ __all__ = [
     "ApiValueError",
     "ApiKeyError",
     "ApiException",
+    "StudiesApi",
+    "OnePageSolverPort",
+    "StudyPort",
+    "Study",
+    "LimitOffsetPageStudy",
+    "LimitOffsetPageFile",
+    "JobMetadataReplace",
+    "LimitOffsetPageJob",
+    "Links",
+    "SolverPort",
+    "JobMetadata",
+    "LimitOffsetPageSolver",
+    "ErrorGet",
+    "OnePageStudyPort",
     # imports from osparc
     "openapi",
 ]
