@@ -540,7 +540,7 @@
         ]
       }
     },
-    "/v0/solversreleases/page": {
+    "/v0/solvers/releases/page": {
       "get": {
         "tags": [
           "solvers"
@@ -1649,8 +1649,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get Job Custom Metadata V0 Solvers  Solver Key  Releases  Version  Jobs  Job Id  Metadata Get",
-                  "type": "object"
+                  "$ref": "#/components/schemas/JobMetadata"
                 }
               }
             }
@@ -1667,13 +1666,13 @@
           }
         }
       },
-      "post": {
+      "put": {
         "tags": [
           "solvers"
         ],
-        "summary": "Create Job Custom Metadata",
-        "description": "Attaches custom metadata to a job.",
-        "operationId": "create_job_custom_metadata",
+        "summary": "Replace Job Custom Metadata",
+        "description": "Changes job's custom metadata",
+        "operationId": "replace_job_custom_metadata",
         "parameters": [
           {
             "required": true,
@@ -1710,8 +1709,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "title": "Metadata",
-                "type": "object"
+                "$ref": "#/components/schemas/JobMetadataReplace"
               }
             }
           },
@@ -2410,8 +2408,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get Study Job Custom Metadata V0 Studies  Study Id  Jobs  Job Id  Metadata Get",
-                  "type": "object"
+                  "$ref": "#/components/schemas/JobMetadata"
                 }
               }
             }
@@ -2428,13 +2425,13 @@
           }
         }
       },
-      "post": {
+      "put": {
         "tags": [
           "studies"
         ],
-        "summary": "Create Study Job Custom Metadata",
-        "description": "Attaches custom metadata to a job",
-        "operationId": "create_study_job_custom_metadata",
+        "summary": "Replace Study Job Custom Metadata",
+        "description": "Changes job's custom metadata",
+        "operationId": "replace_study_job_custom_metadata",
         "parameters": [
           {
             "required": true,
@@ -2461,8 +2458,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "title": "Metadata",
-                "type": "object"
+                "$ref": "#/components/schemas/JobMetadataReplace"
               }
             }
           },
@@ -2712,6 +2708,79 @@
               "filename": "input.txt",
               "id": "0a3b2c56-dbcd-4871-b93b-d454b7883f9f"
             }
+          }
+        }
+      },
+      "JobMetadata": {
+        "title": "JobMetadata",
+        "required": [
+          "job_id",
+          "metadata",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "title": "Job Id",
+            "type": "string",
+            "description": "Parent Job",
+            "format": "uuid"
+          },
+          "metadata": {
+            "title": "Metadata",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Custom key-value map"
+          },
+          "url": {
+            "title": "Url",
+            "maxLength": 2083,
+            "minLength": 1,
+            "type": "string",
+            "description": "Link to get this resource (self)",
+            "format": "uri"
+          }
+        }
+      },
+      "JobMetadataReplace": {
+        "title": "JobMetadataReplace",
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "title": "Metadata",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Custom key-value map"
           }
         }
       },
