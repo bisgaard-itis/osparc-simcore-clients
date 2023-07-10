@@ -115,8 +115,9 @@ dist: artifacts_dir ## builds distribution wheel
 dist-ci: python-client dist ## build wheel and tar ball in a single command
 
 .PHONY: build-n-install-osparc-dev
-build-n-install-osparc-dev: dist-ci ## install the built osparc package in editable mode
-	python -m pip install -e client/ --find-links=artifacts/dist
+build-n-install-osparc-dev: python-client ## install the built osparc package in editable mode
+	python -m pip install -e artifacts/client
+	python -m pip install -e client/
 
 
 ## DOCKER -------------------------------------------------------------------------------
