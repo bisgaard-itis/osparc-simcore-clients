@@ -2,6 +2,7 @@
 0.5.0 osparc client
 """
 from ._info import openapi
+
 from osparc_client import (
     __version__,
     ApiClient,
@@ -39,8 +40,6 @@ from osparc_client import RunningState as TaskStates
 __all__ = [
     # imports from osparc_client
     "__version__",
-    "api",
-    "models",
     "FilesApi",
     "MetaApi",
     "SolversApi",

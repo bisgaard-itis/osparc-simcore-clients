@@ -22,11 +22,11 @@ from osparc_client.models import (
     Profile,
     ProfileUpdate,
     Solver,
-    TaskStates,
     UserRoleEnum,
     UsersGroup,
     ValidationError,
 )
+from osparc_client.models import RunningState as TaskStates
 
 __all__ = [
     "BodyUploadFileV0FilesContentPut",

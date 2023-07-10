@@ -26,6 +26,8 @@ python-client: validate-api-specification artifacts_dir ## generate python clien
 			--package-name=osparc_client \
 			--release-note="Updated to $(APP_VERSION)"
 	black $(PYTHON_DIR)/artifacts/client/*.py
+	@-mkdir $(PYTHON_DIR)/client/osparc/data/
+	@cp $(REPO_ROOT)/api/openapi.json $(PYTHON_DIR)/client/osparc/data/
 
 .PHONY: python-client-from-templates
 python-client-from-templates: validate-api-specification artifacts_dir ## generate python client using templates in a specified directory (usage: 'make python-client-from-templates -e TEMPLATE_DIR=path/to/templates')
@@ -47,6 +49,8 @@ python-client-from-templates: validate-api-specification artifacts_dir ## genera
 			--release-note="Updated to $(APP_VERSION)" \
 			--template-dir=/tmp/python_templates
 	black $(PYTHON_DIR)/artifacts/client/*.py
+	@-mkdir $(PYTHON_DIR)/client/osparc/data/
+	@cp $(REPO_ROOT)/api/openapi.json $(PYTHON_DIR)/client/osparc/data/
 
 .PHONY: generator-help
 generator-help: ## help on client-api generator
@@ -94,7 +98,7 @@ pylint: _check_venv_active ## runs linter (only to check errors. SEE .pylintrc e
 .PHONY: test-dev
 test-dev: _check_venv_active ## runs tests during development
 	# runs tests for development (e.g w/ pdb)
-	pytest -vv --exitfirst --failed-first --durations=10 --pdb --ignore=$(ARTIFACTS_DIR)/client $(PYTHON_DIR)
+	python -m pytest -vv --exitfirst --failed-first --durations=10 --pdb $(PYTHON_DIR)/test/test_osparc
 
 .PHONY: dist
 dist: artifacts_dir ## builds distribution wheel
@@ -102,8 +106,6 @@ dist: artifacts_dir ## builds distribution wheel
 	python -m pip install build
     # Build a binary wheel and a source tarball
 	python -m build --sdist --wheel $(ARTIFACTS_DIR)/client
-	@-mkdir $(PYTHON_DIR)/client/osparc/data/
-	@cp $(REPO_ROOT)/api/openapi.json $(PYTHON_DIR)/client/osparc/data/
 	python -m build --sdist --wheel $(PYTHON_DIR)/client
 	@-rm -rf $(ARTIFACTS_DIR)/dist
 	@mkdir $(ARTIFACTS_DIR)/dist
