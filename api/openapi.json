@@ -1609,7 +1609,7 @@
           "solvers"
         ],
         "summary": "Get Job Custom Metadata",
-        "description": "Gets custom metadata from a job",
+        "description": "Gets custom metadata from a job\n\nNew in *version 0.5*",
         "operationId": "get_job_custom_metadata",
         "parameters": [
           {
@@ -1654,6 +1654,16 @@
               }
             }
           },
+          "404": {
+            "description": "Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorGet"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -1664,14 +1674,19 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBasic": []
+          }
+        ]
       },
-      "put": {
+      "patch": {
         "tags": [
           "solvers"
         ],
         "summary": "Replace Job Custom Metadata",
-        "description": "Changes job's custom metadata",
+        "description": "Updates custom metadata from a job\n\nNew in *version 0.5*",
         "operationId": "replace_job_custom_metadata",
         "parameters": [
           {
@@ -1709,7 +1724,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobMetadataReplace"
+                "$ref": "#/components/schemas/JobMetadataUpdate"
               }
             }
           },
@@ -1720,7 +1735,19 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/JobMetadata"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorGet"
+                }
               }
             }
           },
@@ -1734,7 +1761,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBasic": []
+          }
+        ]
       }
     },
     "/v0/studies/": {
@@ -2458,7 +2490,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobMetadataReplace"
+                "$ref": "#/components/schemas/JobMetadataUpdate"
               }
             }
           },
@@ -2757,8 +2789,8 @@
           }
         }
       },
-      "JobMetadataReplace": {
-        "title": "JobMetadataReplace",
+      "JobMetadataUpdate": {
+        "title": "JobMetadataUpdate",
         "type": "object",
         "properties": {
           "metadata": {
