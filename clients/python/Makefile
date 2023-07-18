@@ -122,6 +122,27 @@ dist-ci: python-client dist ## build wheel and tar ball in a single command
 build-n-install-osparc-dev: dist-ci ## install the built osparc package in editable mode
 	python -m pip install -e client/ --find-links=artifacts/dist
 
+## TEST ---------------------------------------------------------------------------------
+
+GH_TOKEN_FILE := $(wildcard $(HOME)/.gh-token)
+ifneq ($(GH_TOKEN_FILE),)
+	include $(GH_TOKEN_FILE)
+endif
+E2E_SHELL_DIR := /tmp/osparc-simcore-clients
+USERID := $(shell id -u)
+GROUPID := $(shell id -g)
+
+.PHONY: e2e-shell
+e2e-shell: guard-GH_TOKEN ## shell for running e2e tests
+	@docker run \
+		--user $(USERID):$(GROUPID) \
+		--env GH_TOKEN=$(GH_TOKEN) \
+		--volume $(REPO_ROOT):$(E2E_SHELL_DIR) \
+		--workdir $(E2E_SHELL_DIR) \
+		--entrypoint /bin/bash \
+		-it \
+		itisfoundation/osparc_python_tutorial_testing:v1 \
+		-c "python -m venv /tmp/venv && source /tmp/venv/bin/activate && cd clients/python && make install-test && exec /bin/bash"
 
 ## DOCKER -------------------------------------------------------------------------------
 

@@ -1,11 +1,12 @@
-from setuptools import setup, find_packages  # noqa: H301
-from pathlib import Path
 import json
-from typing import Any
+from pathlib import Path
+from typing import Any, Dict
+
+from setuptools import find_packages, setup  # noqa: H301
 
 repo_root: Path = (Path(__file__) / "../../../..").resolve()
 
-config: dict[str, Any] = json.loads((repo_root / "api/config.json").read_text())
+config: Dict[str, Any] = json.loads((repo_root / "api/config.json").read_text())
 
 NAME = "osparc"
 VERSION = f"{config['python']['version']}"
