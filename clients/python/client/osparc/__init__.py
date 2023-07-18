@@ -5,6 +5,15 @@ from ._info import openapi
 
 from osparc_client import (
     __version__,
+
+    # APIs
+    FilesApi,
+    MetaApi,
+    SolversApi,
+    StudiesApi,
+    UsersApi,
+
+    # API client
     ApiClient,
     Configuration,
     OpenApiException,
@@ -12,43 +21,36 @@ from osparc_client import (
     ApiValueError,
     ApiKeyError,
     ApiException,
-    # model imports
+
+    # models
     BodyUploadFileV0FilesContentPut,
+    ErrorGet,
     File,
     Groups,
     HTTPValidationError,
     Job,
     JobInputs,
+    JobMetadata,
+    JobMetadataUpdate,
     JobOutputs,
     JobStatus,
+    LimitOffsetPageFile,
+    LimitOffsetPageJob,
+    LimitOffsetPageSolver,
+    LimitOffsetPageStudy,
+    Links,
     Meta,
+    OnePageSolverPort,
+    OnePageStudyPort,
     Profile,
     ProfileUpdate,
     Solver,
+    SolverPort,
+    Study,
+    StudyPort,
     UserRoleEnum,
     UsersGroup,
     ValidationError,
-    # api imports
-    FilesApi,
-    MetaApi,
-    SolversApi,
-    UsersApi,
-
-
-    StudiesApi,
-    OnePageSolverPort,
-    StudyPort,
-    Study,
-    LimitOffsetPageStudy,
-    LimitOffsetPageFile,
-    JobMetadataReplace,
-    LimitOffsetPageJob,
-    Links,
-    SolverPort,
-    JobMetadata,
-    LimitOffsetPageSolver,
-    ErrorGet,
-    OnePageStudyPort,
 )
 
 from osparc_client import RunningState as TaskStates
@@ -89,7 +91,7 @@ __all__ = [
     "Study",
     "LimitOffsetPageStudy",
     "LimitOffsetPageFile",
-    "JobMetadataReplace",
+    "JobMetadataUpdate",
     "LimitOffsetPageJob",
     "Links",
     "SolverPort",
