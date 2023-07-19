@@ -70,6 +70,7 @@ def get_tutorials(osparc_version: Optional[str] = None) -> List[Path]:
     result: List[Path] = []
     for name in tutorial_names:
         result += list(DOCS_DIR.rglob(f"*{name}"))
+
     return result
 
 
@@ -100,18 +101,17 @@ def test_notebook_config(tmp_path: Path):
     json_notebooks: Set[Path] = set(get_tutorials())
     assert len(tutorials) > 0, f"Did not find any tutorial notebooks in {DOCS_DIR}"
     assert (
-        len(tutorials.intersection(json_notebooks)) == 0
+        len(tutorials.difference(json_notebooks)) == 0
     ), f"Some tutorial notebooks are not present in {TUTORIAL_CLIENT_COMPATIBILITY_JSON}"
 
 
-@pytest.mark.parametrize("tutorials", get_tutorials(osparc_version=osparc.__version__))
-def test_run_tutorials(tmp_path: Path, tutorials: List[Path]):
+@pytest.mark.parametrize("tutorial", get_tutorials(osparc_version=osparc.__version__))
+def test_run_tutorials(tmp_path: Path, tutorial: Path):
     """Run all tutorials compatible with the installed version of osparc
 
     Args:
         tmp_path (Path): pytest tmp_path fixture
         tutorials (List[Path]): list of tutorials
     """
-    for pth in tutorials:
-        print(f"Running {pth.relative_to(DOCS_DIR)}")
-        run_notebook(tmp_path, pth)
+    print(f"Running {tutorial.relative_to(DOCS_DIR)}")
+    run_notebook(tmp_path, tutorial)
