@@ -12,8 +12,8 @@
 
 from __future__ import absolute_import
 
-import unittest
 import datetime
+import unittest
 
 import osparc
 from osparc import Meta  # noqa: E501
@@ -45,11 +45,11 @@ class TestMeta(unittest.TestCase):
             )
         else:
             return Meta(
-                name = '0',
-                version = '0.5.0',
-                docs_url = 'https://docs.osparc.io',
-                docs_dev_url = 'https://api.osparc.io/dev/docs'
-        )
+                name="0",
+                version="0.5.0",
+                docs_url="https://docs.osparc.io",
+                docs_dev_url="https://api.osparc.io/dev/docs",
+            )
 
     def testMeta(self):
         """Test Meta"""

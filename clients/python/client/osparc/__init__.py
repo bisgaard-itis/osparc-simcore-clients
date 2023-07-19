@@ -1,31 +1,17 @@
 """
 0.5.0 osparc client
 """
-from ._info import openapi
-
-from osparc_client import (
-    __version__,
-
-    # APIs
-    FilesApi,
-    MetaApi,
-    SolversApi,
-    StudiesApi,
-    UsersApi,
-
-    # API client
+from osparc_client import (  # APIs; API client; models
     ApiClient,
-    Configuration,
-    OpenApiException,
+    ApiException,
+    ApiKeyError,
     ApiTypeError,
     ApiValueError,
-    ApiKeyError,
-    ApiException,
-
-    # models
     BodyUploadFileV0FilesContentPut,
+    Configuration,
     ErrorGet,
     File,
+    FilesApi,
     Groups,
     HTTPValidationError,
     Job,
@@ -40,20 +26,29 @@ from osparc_client import (
     LimitOffsetPageStudy,
     Links,
     Meta,
+    MetaApi,
     OnePageSolverPort,
     OnePageStudyPort,
+    OpenApiException,
     Profile,
     ProfileUpdate,
+)
+from osparc_client import RunningState as TaskStates
+from osparc_client import (  # APIs; API client; models
     Solver,
     SolverPort,
+    SolversApi,
+    StudiesApi,
     Study,
     StudyPort,
     UserRoleEnum,
+    UsersApi,
     UsersGroup,
     ValidationError,
+    __version__,
 )
 
-from osparc_client import RunningState as TaskStates
+from ._info import openapi
 
 __all__ = [
     # imports from osparc_client
