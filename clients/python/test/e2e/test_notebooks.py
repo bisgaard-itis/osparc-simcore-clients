@@ -24,7 +24,7 @@ assert TUTORIAL_CLIENT_COMPATIBILITY_JSON.is_file()
 assert API_DIR.is_dir()
 
 
-def run_notebook(tmp_path: Path, notebook: Path, params: dict[str, Any] = {}):
+def _run_notebook(tmp_path: Path, notebook: Path, params: dict[str, Any] = {}):
     """Run a jupyter notebook using papermill
 
     Args:
@@ -48,7 +48,7 @@ def run_notebook(tmp_path: Path, notebook: Path, params: dict[str, Any] = {}):
     )
 
 
-def get_tutorials(osparc_version: Optional[str] = None) -> List[Path]:
+def _get_tutorials(osparc_version: Optional[str] = None) -> List[Path]:
     """Returns the tutorial notebooks compatible with a given osparc client version
 
     Args:
@@ -91,7 +91,7 @@ def test_notebook_config(tmp_path: Path):
     # sanity check configuration of jupyter environment
     config_test_nb: Path = DATA_DIR / "config_test.ipynb"
     assert config_test_nb.is_file()
-    run_notebook(
+    _run_notebook(
         tmp_path,
         config_test_nb,
         {
@@ -103,23 +103,25 @@ def test_notebook_config(tmp_path: Path):
 
     # sanity check paths and jsons: are we collecting all notebooks?
     tutorials: Set[Path] = set(DOCS_DIR.glob("*.ipynb"))
-    json_notebooks: Set[Path] = set(get_tutorials())
+    json_notebooks: Set[Path] = set(_get_tutorials())
     assert len(tutorials) > 0, f"Did not find any tutorial notebooks in {DOCS_DIR}"
     assert (
         len(tutorials.difference(json_notebooks)) == 0
     ), f"Some tutorial notebooks are not present in {TUTORIAL_CLIENT_COMPATIBILITY_JSON}"
 
     # check that version of this repo is present in compatibility json
-    cur_version: str = json.loads((API_DIR / "config.json").read_text())["python"][
+    current_version: str = json.loads((API_DIR / "config.json").read_text())["python"][
         "version"
     ]
+    compatible_versions: Set[str] = json.loads(
+        TUTORIAL_CLIENT_COMPATIBILITY_JSON.read_text()
+    )["versions"].keys()
     assert (
-        cur_version
-        in json.loads(TUTORIAL_CLIENT_COMPATIBILITY_JSON.read_text())["versions"].keys()
+        current_version in compatible_versions
     ), f"The version defined in {API_DIR/'config.json'} is not present in {TUTORIAL_CLIENT_COMPATIBILITY_JSON}"
 
 
-@pytest.mark.parametrize("tutorial", get_tutorials())
+@pytest.mark.parametrize("tutorial", _get_tutorials(), ids=lambda p: p.name)
 def test_run_tutorials(tmp_path: Path, tutorial: Path):
     """Run all tutorials compatible with the installed version of osparc
 
@@ -127,9 +129,8 @@ def test_run_tutorials(tmp_path: Path, tutorial: Path):
         tmp_path (Path): pytest tmp_path fixture
         tutorials (List[Path]): list of tutorials
     """
-    if not tutorial in get_tutorials(osparc.__version__):
+    if not tutorial in _get_tutorials(osparc.__version__):
         pytest.skip(
             f"{tutorial.relative_to(DOCS_DIR)} is not compatible with osparc.__version__=={osparc.__version__}. See {TUTORIAL_CLIENT_COMPATIBILITY_JSON.name}"
         )
-    print(f"Running {tutorial.relative_to(DOCS_DIR)}")
-    run_notebook(tmp_path, tutorial)
+    _run_notebook(tmp_path, tutorial)
