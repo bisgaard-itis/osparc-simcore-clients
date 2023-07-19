@@ -113,5 +113,5 @@ def test_run_tutorials(tmp_path: Path, tutorials: List[Path]):
         tutorials (List[Path]): list of tutorials
     """
     for pth in tutorials:
-        print(f"Running {pth}")
+        print(f"Running {pth.relative_to(DOCS_DIR)}")
         run_notebook(tmp_path, pth)
