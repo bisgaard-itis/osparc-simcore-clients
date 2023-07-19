@@ -1,6 +1,8 @@
 """
 0.5.0 osparc client
 """
+from typing import Tuple
+
 from osparc_client import (  # APIs; API client; models
     ApiClient,
     ApiException,
@@ -50,7 +52,7 @@ from osparc_client import (  # APIs; API client; models
 
 from ._info import openapi
 
-__all__: tuple[str, ...] = (
+__all__: Tuple[str, ...] = (
     # imports from osparc_client
     "__version__",
     "FilesApi",
