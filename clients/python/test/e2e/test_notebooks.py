@@ -16,10 +16,12 @@ DATA_DIR: Path = Path(__file__).parent / "data"
 TUTORIAL_CLIENT_COMPATIBILITY_JSON: Path = (
     DATA_DIR / "tutorial_client_compatibility.json"
 )
+API_DIR: Path = DOCS_DIR.parent.parent.parent / "api"
 
 assert DOCS_DIR.is_dir()
 assert DATA_DIR.is_dir()
 assert TUTORIAL_CLIENT_COMPATIBILITY_JSON.is_file()
+assert API_DIR.is_dir()
 
 
 def run_notebook(tmp_path: Path, notebook: Path, params: dict[str, Any] = {}):
@@ -96,6 +98,7 @@ def test_notebook_config(tmp_path: Path):
             "expected_osparc_file": osparc.__file__,
         },
     )
+
     # sanity check paths and jsons: are we collecting all notebooks?
     tutorials: Set[Path] = set(DOCS_DIR.glob("*.ipynb"))
     json_notebooks: Set[Path] = set(get_tutorials())
@@ -104,8 +107,17 @@ def test_notebook_config(tmp_path: Path):
         len(tutorials.difference(json_notebooks)) == 0
     ), f"Some tutorial notebooks are not present in {TUTORIAL_CLIENT_COMPATIBILITY_JSON}"
 
+    # check that version of this repo is present in compatibility json
+    cur_version: str = json.loads((API_DIR / "config.json").read_text())["python"][
+        "version"
+    ]
+    assert (
+        cur_version
+        in json.loads(TUTORIAL_CLIENT_COMPATIBILITY_JSON.read_text())["versions"].keys()
+    ), f"The version defined in {API_DIR/'config.json'} is not present in {TUTORIAL_CLIENT_COMPATIBILITY_JSON}"
 
-@pytest.mark.parametrize("tutorial", get_tutorials(osparc_version=osparc.__version__))
+
+@pytest.mark.parametrize("tutorial", get_tutorials())
 def test_run_tutorials(tmp_path: Path, tutorial: Path):
     """Run all tutorials compatible with the installed version of osparc
 
@@ -113,5 +125,9 @@ def test_run_tutorials(tmp_path: Path, tutorial: Path):
         tmp_path (Path): pytest tmp_path fixture
         tutorials (List[Path]): list of tutorials
     """
+    if not tutorial in get_tutorials(osparc.__version__):
+        pytest.skip(
+            f"{tutorial.relative_to(DOCS_DIR)} is not compatible with osparc.__version__=={osparc.__version__}. See {TUTORIAL_CLIENT_COMPATIBILITY_JSON.name}"
+        )
     print(f"Running {tutorial.relative_to(DOCS_DIR)}")
     run_notebook(tmp_path, tutorial)
