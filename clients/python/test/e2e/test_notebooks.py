@@ -3,7 +3,7 @@ import shutil
 import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Union
 
 import osparc
 import papermill as pm
