@@ -60,15 +60,17 @@ def get_tutorials(osparc_version: Optional[str] = None) -> List[Path]:
     compatibility_dict: Dict[str, Any] = json.loads(
         TUTORIAL_CLIENT_COMPATIBILITY_JSON.read_text()
     )
-    tutorial_names: List[str] = []
+    tutorial_names: Set[str] = set()
     if osparc_version is not None:
         assert (
             osparc_version in compatibility_dict["versions"]
         ), f"{osparc_version} does not exist in {TUTORIAL_CLIENT_COMPATIBILITY_JSON}"
-        tutorial_names = compatibility_dict["versions"][osparc_version]
+        tutorial_names = set(compatibility_dict["versions"][osparc_version])
     else:
         for v in compatibility_dict["versions"]:
-            tutorial_names += compatibility_dict["versions"][v]
+            tutorial_names = tutorial_names.union(
+                set(compatibility_dict["versions"][v])
+            )
     result: List[Path] = []
     for name in tutorial_names:
         result += list(DOCS_DIR.rglob(f"*{name}"))
