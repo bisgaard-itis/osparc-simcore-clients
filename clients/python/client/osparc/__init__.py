@@ -50,7 +50,7 @@ from osparc_client import (  # APIs; API client; models
 
 from ._info import openapi
 
-__all__ = [
+__all__: tuple[str, ...] = (
     # imports from osparc_client
     "__version__",
     "FilesApi",
@@ -96,4 +96,4 @@ __all__ = [
     "OnePageStudyPort",
     # imports from osparc
     "openapi",
-]
+)
