@@ -1,5 +1,5 @@
 import warnings
-from typing import Final
+from typing import Final, Tuple
 
 from ._warnings_and_errors import VisibleDeprecationWarning
 
@@ -11,4 +11,4 @@ warnings.warn(warning_msg, VisibleDeprecationWarning)
 
 from osparc_client.api import FilesApi, MetaApi, SolversApi, UsersApi
 
-__all__ = ["FilesApi", "MetaApi", "SolversApi", "UsersApi"]
+__all__: Tuple[str, ...] = ("FilesApi", "MetaApi", "SolversApi", "UsersApi")
