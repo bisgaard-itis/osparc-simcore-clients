@@ -102,7 +102,13 @@ pylint: _check_venv_active ## runs linter (only to check errors. SEE .pylintrc e
 .PHONY: test-dev
 test-dev: _check_venv_active ## runs tests during development
 	# runs tests for development (e.g w/ pdb)
-	python -m pytest -vv --exitfirst --failed-first --durations=10 --pdb $(PYTHON_DIR)/test/test_osparc
+	python -m pytest \
+		-vv \
+		--exitfirst \
+		--failed-first \
+		--durations=10 \
+		--pdb \
+		$(PYTHON_DIR)/test/test_osparc
 
 .PHONY: dist
 dist: artifacts_dir ## builds distribution wheel
