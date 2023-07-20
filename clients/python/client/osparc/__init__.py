@@ -1,30 +1,48 @@
 """
 0.5.0 osparc client
 """
-from osparc_client import ApiClient  # model imports; api imports
-from osparc_client import (
+from typing import Tuple
+
+from osparc_client import (  # APIs; API client; models
+    ApiClient,
     ApiException,
     ApiKeyError,
     ApiTypeError,
     ApiValueError,
     BodyUploadFileV0FilesContentPut,
     Configuration,
+    ErrorGet,
     File,
     FilesApi,
     Groups,
     HTTPValidationError,
     Job,
     JobInputs,
+    JobMetadata,
+    JobMetadataUpdate,
     JobOutputs,
     JobStatus,
+    LimitOffsetPageFile,
+    LimitOffsetPageJob,
+    LimitOffsetPageSolver,
+    LimitOffsetPageStudy,
+    Links,
     Meta,
     MetaApi,
+    OnePageSolverPort,
+    OnePageStudyPort,
     OpenApiException,
     Profile,
     ProfileUpdate,
+)
+from osparc_client import RunningState as TaskStates
+from osparc_client import (  # APIs; API client; models
     Solver,
+    SolverPort,
     SolversApi,
-    TaskStates,
+    StudiesApi,
+    Study,
+    StudyPort,
     UserRoleEnum,
     UsersApi,
     UsersGroup,
@@ -34,11 +52,9 @@ from osparc_client import (
 
 from ._info import openapi
 
-__all__ = [
+__all__: Tuple[str, ...] = (
     # imports from osparc_client
     "__version__",
-    "api",
-    "models",
     "FilesApi",
     "MetaApi",
     "SolversApi",
@@ -66,6 +82,20 @@ __all__ = [
     "ApiValueError",
     "ApiKeyError",
     "ApiException",
+    "StudiesApi",
+    "OnePageSolverPort",
+    "StudyPort",
+    "Study",
+    "LimitOffsetPageStudy",
+    "LimitOffsetPageFile",
+    "JobMetadataUpdate",
+    "LimitOffsetPageJob",
+    "Links",
+    "SolverPort",
+    "JobMetadata",
+    "LimitOffsetPageSolver",
+    "ErrorGet",
+    "OnePageStudyPort",
     # imports from osparc
     "openapi",
-]
+)

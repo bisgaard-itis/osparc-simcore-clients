@@ -1,5 +1,5 @@
 import warnings
-from typing import Final
+from typing import Final, Tuple
 
 from ._warnings_and_errors import VisibleDeprecationWarning
 
@@ -22,14 +22,11 @@ from osparc_client.models import (
     Meta,
     Profile,
     ProfileUpdate,
-    Solver,
-    TaskStates,
-    UserRoleEnum,
-    UsersGroup,
-    ValidationError,
 )
+from osparc_client.models import RunningState as TaskStates
+from osparc_client.models import Solver, UserRoleEnum, UsersGroup, ValidationError
 
-__all__ = [
+__all__: Tuple[str, ...] = (
     "BodyUploadFileV0FilesContentPut",
     "File",
     "Groups",
@@ -46,4 +43,4 @@ __all__ = [
     "UserRoleEnum",
     "UsersGroup",
     "ValidationError",
-]
+)
