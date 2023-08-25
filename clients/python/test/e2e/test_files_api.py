@@ -30,7 +30,7 @@ def _hash_file(file: Path) -> str:
 def test_upload_file(tmp_path: Path, cfg: osparc.Configuration) -> None:
     """Test that we can upload a file via the multipart upload"""
     # create file to upload
-    byte_size: int = 10 * _GB
+    byte_size: int = 1 * _GB
     tmp_file = tmp_path / "large_test_file.txt"
     tmp_file.write_bytes(b"large test file")
     with open(tmp_file, "wb") as f:

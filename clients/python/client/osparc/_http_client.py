@@ -10,14 +10,11 @@ class AsyncHttpClient:
     def __init__(
         self,
         *,
-        base_url: httpx.URL,
         request_type: Optional[str] = None,
         url: Optional[str] = None,
-        auth: Optional[httpx.BasicAuth] = None,
+        **httpx_async_client_kwargs
     ):
-        self._client = httpx.AsyncClient(
-            base_url=base_url, auth=auth, follow_redirects=True
-        )
+        self._client = httpx.AsyncClient(**httpx_async_client_kwargs)
         self._callback = getattr(self._client, request_type) if request_type else None
         self._url = url
 
