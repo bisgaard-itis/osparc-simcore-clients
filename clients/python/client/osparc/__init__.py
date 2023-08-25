@@ -3,6 +3,7 @@
 """
 from typing import Tuple
 
+import nest_asyncio
 from osparc_client import (  # APIs; API client; models
     ApiClient,
     ApiException,
@@ -13,7 +14,6 @@ from osparc_client import (  # APIs; API client; models
     Configuration,
     ErrorGet,
     File,
-    FilesApi,
     Groups,
     HTTPValidationError,
     Job,
@@ -22,10 +22,6 @@ from osparc_client import (  # APIs; API client; models
     JobMetadataUpdate,
     JobOutputs,
     JobStatus,
-    LimitOffsetPageFile,
-    LimitOffsetPageJob,
-    LimitOffsetPageSolver,
-    LimitOffsetPageStudy,
     Links,
     Meta,
     MetaApi,
@@ -49,13 +45,18 @@ from osparc_client import (  # APIs; API client; models
     __version__,
 )
 
+from ._files_api import FilesApi
 from ._info import openapi
 from ._solvers_api import SolversApi
+from ._utils import PaginationGenerator
+
+nest_asyncio.apply()  # allow to run coroutines via asyncio.run(coro)
 
 __all__: Tuple[str, ...] = (
     # imports from osparc_client
     "__version__",
     "FilesApi",
+    "PaginationGenerator",
     "MetaApi",
     "SolversApi",
     "UsersApi",
@@ -86,14 +87,10 @@ __all__: Tuple[str, ...] = (
     "OnePageSolverPort",
     "StudyPort",
     "Study",
-    "LimitOffsetPageStudy",
-    "LimitOffsetPageFile",
     "JobMetadataUpdate",
-    "LimitOffsetPageJob",
     "Links",
     "SolverPort",
     "JobMetadata",
-    "LimitOffsetPageSolver",
     "ErrorGet",
     "OnePageStudyPort",
     # imports from osparc
