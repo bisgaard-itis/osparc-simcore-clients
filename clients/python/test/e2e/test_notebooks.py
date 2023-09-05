@@ -2,14 +2,14 @@ import json
 import shutil
 import sys
 from pathlib import Path
-from tempfile import TemporaryDirectory
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Set
 
 import osparc
 import papermill as pm
 import pytest
 
-# utilities --------------------------------------------------------------------------
+docs_dir: Path = Path(__file__).parent.parent.parent / "docs"
+all_notebooks: List[Path] = list(docs_dir.rglob("*.ipynb"))
 
 DOCS_DIR: Path = Path(__file__).parent.parent.parent / "docs"
 DATA_DIR: Path = Path(__file__).parent / "data"
@@ -30,7 +30,8 @@ def _run_notebook(tmp_path: Path, notebook: Path, params: dict[str, Any] = {}):
     Args:
         tmp_path (Path): temporary directory
         notebook (Path): path to notebook to run
-        params (dict[str, Any], optional): parameters to pass to notebook. Defaults to {}.
+        params (dict[str, Any], optional): parameters to pass to notebook.
+            Defaults to {}.
     """
     print(f"Running {notebook.name} with parameters {params}")
     assert (
@@ -83,7 +84,8 @@ def _get_tutorials(osparc_version: Optional[str] = None) -> List[Path]:
 
 def test_notebook_config(tmp_path: Path):
     """Test configuration of test setup.
-    Make sanity checks (ensure all files are discovered, correct installations are on path etc)
+    Make sanity checks (ensure all files are discovered,
+    correct installations are on path etc)
 
     Args:
         tmp_path (Path): Temporary path pytest fixture
@@ -105,9 +107,10 @@ def test_notebook_config(tmp_path: Path):
     tutorials: Set[Path] = set(DOCS_DIR.glob("*.ipynb"))
     json_notebooks: Set[Path] = set(_get_tutorials())
     assert len(tutorials) > 0, f"Did not find any tutorial notebooks in {DOCS_DIR}"
-    assert (
-        len(tutorials.difference(json_notebooks)) == 0
-    ), f"Some tutorial notebooks are not present in {TUTORIAL_CLIENT_COMPATIBILITY_JSON}"
+    assert len(tutorials.difference(json_notebooks)) == 0, (
+        "Some tutorial notebooks are "
+        "not present in {TUTORIAL_CLIENT_COMPATIBILITY_JSON}"
+    )
 
     # check that version of this repo is present in compatibility json
     current_version: str = json.loads((API_DIR / "config.json").read_text())["python"][
@@ -116,21 +119,27 @@ def test_notebook_config(tmp_path: Path):
     compatible_versions: Set[str] = json.loads(
         TUTORIAL_CLIENT_COMPATIBILITY_JSON.read_text()
     )["versions"].keys()
-    assert (
-        current_version in compatible_versions
-    ), f"The version defined in {API_DIR/'config.json'} is not present in {TUTORIAL_CLIENT_COMPATIBILITY_JSON}"
+    assert current_version in compatible_versions, (
+        f"The version defined in {API_DIR/'config.json'} "
+        "is not present in {TUTORIAL_CLIENT_COMPATIBILITY_JSON}"
+    )
 
 
 @pytest.mark.parametrize("tutorial", _get_tutorials(), ids=lambda p: p.name)
 def test_run_tutorials(tmp_path: Path, tutorial: Path):
-    """Run all tutorials compatible with the installed version of osparc
+    """Run all tutorials compatible with the installed
+    version of osparc
 
     Args:
         tmp_path (Path): pytest tmp_path fixture
         tutorials (List[Path]): list of tutorials
     """
-    if not tutorial in _get_tutorials(osparc.__version__):
+    if tutorial not in _get_tutorials(osparc.__version__):
         pytest.skip(
-            f"{tutorial.relative_to(DOCS_DIR)} is not compatible with osparc.__version__=={osparc.__version__}. See {TUTORIAL_CLIENT_COMPATIBILITY_JSON.name}"
+            (
+                f"{tutorial.relative_to(DOCS_DIR)} is not compatible "
+                "with osparc.__version__=={osparc.__version__}. "
+                "See {TUTORIAL_CLIENT_COMPATIBILITY_JSON.name}"
+            )
         )
     _run_notebook(tmp_path, tutorial)

@@ -1,67 +1,71 @@
-import json
-import shutil
 import warnings
 from pathlib import Path
-from typing import List, Set
-from urllib.parse import urlparse
+from typing import Set
 
 import pandas as pd
 import pytest
-import toml
 import typer
-from _utils import (
-    _ARTIFACTS_DIR,
-    _PYPROJECT_TOML,
-    ClientConfig,
-    E2eExitCodes,
-    E2eScriptFailure,
-    ServerConfig,
-)
+from _data_classes import Artifacts, ClientConfig, PytestIniFile, ServerConfig
+from _utils import E2eExitCodes, E2eScriptFailure, print_line
 from pydantic import ValidationError
+
+
+def log(exit_code: int):
+    """Log exit status"""
+    print("Exit status")
+    print("-------------")
+    if exit_code in {e.value for e in E2eExitCodes}:
+        print(f"\t{E2eExitCodes(exit_code).name}")
+    elif exit_code in {e.value for e in pytest.ExitCode}:
+        print(f"\t{pytest.ExitCode(exit_code).name}")
+    else:
+        print(f"\t{E2eExitCodes.CI_SCRIPT_FAILURE.name}")
+    print_line()
 
 
 def main(exit_code: int) -> None:
     """
     Postprocess results from e2e pytests
-    This scripts appends the pytest exit code to clients/python/artifacts/e2e/<client_ref>.json for it to be parsed later
-    It also moves the pyproject.toml to clients/python/artifacts/e2e in order to be able to reproduce tests later
+    This scripts appends the pytest exit code to
+    clients/python/artifacts/e2e/<client_ref>.json for it to be parsed later.
+    It also moves the pyproject.toml to clients/python/artifacts/e2e in order
+    to be able to reproduce tests later
 
     arguments:
     ----------
-        exit_code : Integer exit code from running pytests or a custom exitcode (see ExitCodes).
+        exit_code : Integer exit code from running pytests or a
+        custom exitcode (see ExitCodes).
 
     returns:
     --------
         None
     """
+    log(exit_code)
     expected_exitcodes: Set = {
-        E2eExitCodes.INVALID_CLIENT_VS_SERVER,
+        E2eExitCodes.INCOMPATIBLE_CLIENT_SERVER,
         pytest.ExitCode.OK,
         pytest.ExitCode.TESTS_FAILED,
     }
-    if not exit_code in expected_exitcodes:
+    if exit_code not in expected_exitcodes:
         warnings.warn(
             f"Received unexpected exitcode {exit_code}. See https://docs.pytest.org/en/7.1.x/reference/exit-codes.html",
             E2eScriptFailure,
         )
         typer.Exit(code=E2eExitCodes.CI_SCRIPT_FAILURE)
 
-    _ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
-    if not _PYPROJECT_TOML.is_file():
-        warnings.warn(f"cfg_file={_PYPROJECT_TOML}", E2eScriptFailure)
-        raise typer.Exit(code=E2eExitCodes.CI_SCRIPT_FAILURE)
-
-    # extract values
+    # get config
     try:
-        server_cfg: ServerConfig = ServerConfig(**toml.load(_PYPROJECT_TOML)["server"])
-        client_cfg: ClientConfig = ClientConfig(**toml.load(_PYPROJECT_TOML)["client"])
-    except (ValueError, ValidationError) as e:
-        print(toml.load(_PYPROJECT_TOML)["server"])
-        print(print(toml.load(_PYPROJECT_TOML)["client"]))
+        pytest_ini: PytestIniFile = PytestIniFile.read()
+    except (ValueError, ValidationError):
         raise typer.Exit(code=E2eExitCodes.INVALID_JSON_DATA)
 
+    client_cfg: ClientConfig = pytest_ini.client
+    server_cfg: ServerConfig = pytest_ini.server
+    artifacts: Artifacts = pytest_ini.artifacts
+
     # add result to json
-    result_file: Path = _ARTIFACTS_DIR / (client_cfg.client_ref + ".json")
+    result_file: Path = artifacts.result_data_frame
+    result_file.parent.mkdir(exist_ok=True)
     new_df: pd.DataFrame = pd.DataFrame(
         columns=[client_cfg.client_ref], index=[server_cfg.url.netloc], data=[exit_code]
     )
@@ -74,12 +78,9 @@ def main(exit_code: int) -> None:
         result_df = new_df
     result_file.write_text(result_df.to_json())
 
-    # copy toml to artifacts dir
-    toml_dir: Path = _ARTIFACTS_DIR / (
-        client_cfg.client_ref + "+" + server_cfg.url.netloc
-    )
-    toml_dir.mkdir(exist_ok=False)
-    shutil.move(_PYPROJECT_TOML, toml_dir / _PYPROJECT_TOML.name)
+    # copy ini to artifacts dir
+    artifacts.log_dir.mkdir(exist_ok=True)
+    pytest_ini.generate(artifacts.log_dir / "pytest.ini")
     raise typer.Exit(code=pytest.ExitCode.OK)
 
 
