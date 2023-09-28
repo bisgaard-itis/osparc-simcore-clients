@@ -12,15 +12,15 @@ from httpx import AsyncClient, Response
 from osparc_client import (
     BodyCompleteMultipartUploadV0FilesFileIdCompletePost,
     ClientFile,
-    ClientFileUploadSchema,
+    ClientFileUploadData,
 )
 from osparc_client import FilesApi as _FilesApi
-from osparc_client import FileUploadCompletionBody, FileUploadLinks, UploadedPart
+from osparc_client import FileUploadCompletionBody, FileUploadData, UploadedPart
 from tqdm.asyncio import tqdm
 
 from . import ApiClient, File
 from ._http_client import AsyncHttpClient
-from ._utils import _file_chunk_generator
+from ._utils import PaginationGenerator, compute_sha256, file_chunk_generator
 
 
 class FilesApi(_FilesApi):
@@ -71,14 +71,22 @@ class FilesApi(_FilesApi):
             file = Path(file)
         if not file.is_file():
             raise RuntimeError(f"{file} is not a file")
+        checksum: str = compute_sha256(file)
+        for file_result in self._search_files(sha256_checksum=checksum):
+            if file_result.filename == file.name:
+                # if a file has the same sha256 checksum
+                # and name they are considered equal
+                return file_result
         client_file: ClientFile = ClientFile(
-            filename=file.name, filesize=file.stat().st_size
+            filename=file.name,
+            filesize=file.stat().st_size,
+            sha256_checksum=checksum,
         )
-        client_upload_schema: ClientFileUploadSchema = self._super.get_upload_links(
+        client_upload_schema: ClientFileUploadData = self._super.get_upload_links(
             client_file=client_file
         )
         chunk_size: int = client_upload_schema.upload_schema.chunk_size
-        links: FileUploadLinks = client_upload_schema.upload_schema.links
+        links: FileUploadData = client_upload_schema.upload_schema.links
         url_iter: Iterator[Tuple[int, str]] = enumerate(
             iter(client_upload_schema.upload_schema.urls), start=1
         )
@@ -92,7 +100,7 @@ class FilesApi(_FilesApi):
         print("- uploading chunks...")
         async with AsyncHttpClient() as session:
             async for chunck, size in tqdm(
-                _file_chunk_generator(file, chunk_size), total=n_urls
+                file_chunk_generator(file, chunk_size), total=n_urls
             ):
                 index, url = next(url_iter)
                 uploaded_parts.append(
@@ -154,3 +162,18 @@ class FilesApi(_FilesApi):
         assert "Etag" in response.headers  # nosec
         etag: str = json.loads(response.headers["Etag"])
         return UploadedPart(number=index, e_tag=etag)
+
+    def _search_files(
+        self, file_id: Optional[str] = None, sha256_checksum: Optional[str] = None
+    ) -> PaginationGenerator:
+        def pagination_method():
+            return super(FilesApi, self).search_files_page(
+                file_id=file_id, sha256_checksum=sha256_checksum
+            )
+
+        return PaginationGenerator(
+            first_page_callback=pagination_method,
+            api_client=self.api_client,
+            base_url=self.api_client.configuration.host,
+            auth=self._auth,
+        )
