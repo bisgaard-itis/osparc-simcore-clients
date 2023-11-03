@@ -5,6 +5,7 @@ on:
     branches: [master]
     types:
       - completed
+permissions: read-all
 
 jobs:
   publish-osparc_client:
@@ -19,6 +20,8 @@ jobs:
     steps:
       - name: Download wheels
         run: gh run download ${{ github.event.workflow_run.id }}
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Remove osparc wheel
         run: |
           osparc_wheel=$(ls osparc_python_wheels/osparc-*)
@@ -49,6 +52,8 @@ jobs:
     steps:
       - name: Download wheels
         run: gh run download ${{ github.event.workflow_run.id }}
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Remove osparc_client wheel
         run: |
           osparc_client_wheel=$(ls osparc_python_wheels/osparc_client*)
