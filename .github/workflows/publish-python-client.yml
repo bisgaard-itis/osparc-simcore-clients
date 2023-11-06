@@ -9,14 +9,6 @@ permissions: read-all
 
 jobs:
 
-  debug:
-    name: debug
-    runs-on: ubuntu-latest
-    steps:
-      - name: print debug messages
-        run: |
-          echo "github.ref=${{github.ref}}"
-
   publish-osparc_client:
     name: Publish osparc_client wheel
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
@@ -29,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.client_payload.ref }}
+          ref: ${{ github.event.workflow_run.head_sha }}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -37,7 +29,6 @@ jobs:
       - name: Set up Python environment
         run: |
           make devenv
-          source .venv/bin/activate
       - name: Download wheels
         id: download
         run: |
@@ -80,7 +71,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.client_payload.ref }}
+          ref: ${{ github.event.workflow_run.head_sha }}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -88,7 +79,6 @@ jobs:
       - name: Set up Python environment
         run: |
           make devenv
-          source .venv/bin/activate
       - name: Download wheels
         id: download
         run: |
