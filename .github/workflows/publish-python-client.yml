@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.ref }}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -32,7 +32,7 @@ jobs:
         id: download
         run: |
           source .venv/bin/activate
-          repo=${{github.repository_owner}}/${{github.repository.name}}
+          repo=${{github.repository}}
           gh run download ${{ inputs.run_id }} --repo=${repo}
           version=$(cat osparc_python_wheels/VERSION)
           is_release=$(python scripts/is_semantic_version.py "${version}" --no-raise-result)
@@ -68,7 +68,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.ref }}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -80,7 +80,7 @@ jobs:
         id: download
         run: |
           source .venv/bin/activate
-          repo=${{github.repository_owner}}/${{github.repository.name}}
+          repo=${{github.repository}}
           gh run download ${{ inputs.run_id }} --repo=${repo}
           version=$(cat osparc_python_wheels/VERSION)
           is_release=$(python scripts/is_semantic_version.py "${version}" --no-raise-result)
