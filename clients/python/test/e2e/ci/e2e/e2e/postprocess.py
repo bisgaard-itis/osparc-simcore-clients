@@ -210,22 +210,22 @@ def clean_up_jobs(artifacts_dir: Path, retry_minutes: Optional[PositiveInt] = No
         cfg = {s: dict(obj.items(s)) for s in obj.sections()}
         server_config = ServerSettings.model_validate(cfg.get("server"))
         servers.add(server_config)
-    for attempt in Retrying(
-        retry=retry_if_exception_type(osparc.ApiException),
-        stop=stop_after_delay(timedelta(minutes=retry_minutes))
-        if retry_minutes
-        else stop_after_attempt(1),
-    ):
-        with attempt:
-            for server_config in servers:
-                config = osparc.Configuration(
-                    host=server_config.host,
-                    username=server_config.key,
-                    password=server_config.secret,
-                )
-                msg = "Cleaning up jobs for user: "
-                msg += f"\n{server_config.model_dump_json(indent=1)}"
-                typer.echo(msg)
+    for server_config in servers:
+        config = osparc.Configuration(
+            host=server_config.host,
+            username=server_config.key,
+            password=server_config.secret,
+        )
+        msg = "Cleaning up jobs for user: "
+        msg += f"\n{server_config.model_dump_json(indent=1)}"
+        typer.echo(msg)
+        for attempt in Retrying(
+            retry=retry_if_exception_type(osparc.ApiException),
+            stop=stop_after_delay(timedelta(minutes=retry_minutes))
+            if retry_minutes
+            else stop_after_attempt(1),
+        ):
+            with attempt:
                 with osparc.ApiClient(config) as api_client:
                     solvers_api = osparc.SolversApi(api_client)
                     assert isinstance(
