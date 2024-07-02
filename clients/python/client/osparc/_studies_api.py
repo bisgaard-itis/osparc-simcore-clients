@@ -45,8 +45,7 @@ class StudiesApi(_StudiesApi):
         Args:
             api_client (ApiClient, optinal): osparc.ApiClient object
         """
-        self._super: _StudiesApi = super()
-        self._super.__init__(api_client)
+        super().__init__(api_client)
         user: Optional[str] = self.api_client.configuration.username
         passwd: Optional[str] = self.api_client.configuration.password
         self._auth: Optional[httpx.BasicAuth] = (
@@ -55,7 +54,7 @@ class StudiesApi(_StudiesApi):
             else None
         )
 
-    def __getattribute__(self, name: str) -> Any:
+    def __getattr__(self, name: str) -> Any:
         if (name in StudiesApi._dev_features) and (not dev_features_enabled()):
             raise NotImplementedError(f"StudiesApi.{name} is still under development")
         return super().__getattribute__(name)
@@ -68,10 +67,12 @@ class StudiesApi(_StudiesApi):
         kwargs = {**kwargs, **ParentProjectInfo().model_dump(exclude_none=True)}
         return super().clone_study(study_id, **kwargs)
 
-    def studies(self) -> PaginationGenerator:
+    def studies(self, **kwargs) -> PaginationGenerator:
         def _pagination_method():
-            page_study = super(StudiesApi, self).list_studies(
-                limit=_DEFAULT_PAGINATION_LIMIT, offset=_DEFAULT_PAGINATION_OFFSET
+            page_study = self.list_studies(
+                limit=_DEFAULT_PAGINATION_LIMIT,
+                offset=_DEFAULT_PAGINATION_OFFSET,
+                **kwargs,
             )
             assert isinstance(page_study, PageStudy)  # nosec
             return page_study
