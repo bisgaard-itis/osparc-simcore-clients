@@ -2,6 +2,7 @@ import osparc
 import pytest
 from faker import Faker
 
+
 @pytest.fixture
 def cfg(faker: Faker) -> osparc.Configuration:
     return osparc.Configuration(
@@ -12,5 +13,10 @@ def cfg(faker: Faker) -> osparc.Configuration:
 
 
 @pytest.fixture
-def dev_mode_enabled(monkeypatch:pytest.MonkeyPatch):
+def api_client(cfg: osparc.Configuration) -> osparc.ApiClient:
+    return osparc.ApiClient(configuration=cfg)
+
+
+@pytest.fixture
+def dev_mode_enabled(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("OSPARC_DEV_FEATURES_ENABLED", "1")
