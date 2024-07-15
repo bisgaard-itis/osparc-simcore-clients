@@ -57,9 +57,8 @@ if Version(python_version()) < _PYTHON_VERSION_RETIRED:
 
 if Version(python_version()) < _PYTHON_VERSION_DEPRECATED:
     warning_msg: str = (
-        "This is the final version of osparc which "
-        f"will support Python {python_version()}. "
-        "Future versions of osparc will only support "
+        f"Python {python_version()} is deprecated. "
+        "Please upgrade to "
         f"Python version >= {_PYTHON_VERSION_DEPRECATED}."
     )
     warnings.warn(warning_msg, VisibleDeprecationWarning)
