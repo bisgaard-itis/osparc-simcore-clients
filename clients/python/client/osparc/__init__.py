@@ -47,6 +47,7 @@ from ._utils import dev_features_enabled
 
 _PYTHON_VERSION_RETIRED = Version("3.8.0")
 _PYTHON_VERSION_DEPRECATED = Version("3.8.0")
+assert _PYTHON_VERSION_RETIRED <= _PYTHON_VERSION_DEPRECATED  # nosec
 
 if Version(python_version()) < _PYTHON_VERSION_RETIRED:
     error_msg: str = (
