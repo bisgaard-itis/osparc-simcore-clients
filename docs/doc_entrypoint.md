@@ -24,11 +24,10 @@ pip install osparc
 
 ## Getting Started with `osparc`
 
-To begin using `osparc`, simply import the package and refer to the detailed examples provided in the [official documentation](https://github.com/your-username/osparc/wiki).
 
 ### API Key/Secret Setup
 
-Before interacting with the osparc API, you need to generate an API key-secret pair from your osparc account. Follow the [instructions here](https://docs.osparc.io/#/docs/platform_introduction/profile?id=preferences) to create the key and secret.
+Before interacting with the osparc API, you need to generate an API key-secret pair from your osparc account. Follow the [instructions here](https://docs.osparc.io/#/docs/platform_introduction/user_setup/security_details?id=generating-o%c2%b2s%c2%b2parc-tokens) to create the key and secret.
 
 Once generated, you can configure them by either:
 
@@ -79,13 +78,9 @@ For more in-depth usage, refer to the following tutorial guides:
 - [Version 0.6 Documentation](clients/python/docs/v0.6.0/README.md)
 
 
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get involved.
-
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
 
 ---
 
