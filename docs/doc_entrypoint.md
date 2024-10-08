@@ -4,7 +4,6 @@
 [![PyPI - Release](https://img.shields.io/pypi/status/osparc)](https://pypi.org/project/osparc/#history)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/osparc)](https://pypi.org/project/osparc/)
 
-
 `osparc` is a Python package that provides tools and functionalities to interact with the o²S²PARC platform. It allows for seamless integration and automation of workflows in simulation science, making it easier to handle simulations and access [o²S²PARC services](https://github.com/ITISFoundation/osparc-simcore)
 
 ## Features
@@ -21,9 +20,7 @@ You can install `osparc` directly from PyPI:
 pip install osparc
 ```
 
-
 ## Getting Started with `osparc`
-
 
 ### API Key/Secret Setup
 
@@ -72,16 +69,17 @@ with ApiClient() as api_client:
 
 ### Additional Resources
 
-For more in-depth usage, refer to the following tutorial guides:
+For more in-depth usage, refer to the following resources:
 
-- [Version 0.5 Documentation](clients/python/docs/v0.5.0/README.md)
-- [Version 0.6 Documentation](clients/python/docs/v0.6.0/README.md)
+- 📚 Documentation
+  - [Version 0.6](clients/python/docs/v0.6.0/README.md)
+  - [Version 0.5](clients/python/docs/v0.5.0/README.md)
+- [Community-Contributed Scripts](https://github.com/topics/osparc-python)
+  - ✨ [gh:newton1985/osparc_api_example](https://github.com/newton1985/osparc_api_example): A repository containing a "standalone" sample project that illustrates the use of the osparc API
+
+>💡 If you want your scripts to be listed here, just create a github repository and [tag it with the  `osparc-python` topic](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics).
 
 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
-
----
-
-Make sure to replace `your-username` with your actual GitHub username or repository link, and feel free to modify the sections as necessary.
