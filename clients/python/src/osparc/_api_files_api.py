@@ -1,3 +1,5 @@
+# wraps osparc_client.api.files_api
+
 import asyncio
 import json
 import logging
@@ -10,26 +12,28 @@ from typing import Any, Iterator, List, Optional, Tuple, Union
 
 import httpx
 from httpx import Response
-from osparc_client import (
+from osparc_client.api.files_api import FilesApi as _FilesApi
+from tqdm.asyncio import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
+
+from ._api_client import ApiClient
+from ._http_client import AsyncHttpClient
+from .models import (
     BodyAbortMultipartUploadV0FilesFileIdAbortPost,
     BodyCompleteMultipartUploadV0FilesFileIdCompletePost,
     ClientFile,
     ClientFileUploadData,
+    File,
+    FileUploadCompletionBody,
+    FileUploadData,
+    UploadedPart,
 )
-from osparc_client import FilesApi as _FilesApi
-from osparc_client import FileUploadCompletionBody, FileUploadData, UploadedPart
-from tqdm.asyncio import tqdm
-from tqdm.contrib.logging import logging_redirect_tqdm
-
-from . import File
-from ._api_client import ApiClient
-from ._http_client import AsyncHttpClient
 from ._utils import (
     DEFAULT_TIMEOUT_SECONDS,
     PaginationGenerator,
     compute_sha256,
-    file_chunk_generator,
     dev_features_enabled,
+    file_chunk_generator,
 )
 
 _logger = logging.getLogger(__name__)
