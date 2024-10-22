@@ -15,5 +15,5 @@ elif [ "${version}" == "latest_master" ]; then
 else
     pip install osparc=="${version}" --force-reinstall --dry-run --quiet --report "${report}"
 fi
-jq -r '.install[] | select(.metadata.name == "osparc") | .metadata.version' "${report}" -e
+jq -r '.install[] | select(.metadata.name == "osparc") | .metadata.version' "${report}"
 rm -rf "${report}"
