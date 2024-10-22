@@ -11,7 +11,7 @@ trap 'rm -rf ${report}' ERR
 if [ "${version}" == "latest_release" ]; then
     pip install osparc --force-reinstall --dry-run --quiet --report "${report}"
 elif [ "${version}" == "latest_master" ]; then
-    pip install osparc --force-reinstall --dry-run --quiet --pre --report "${report}"
+    pip install osparc --pre --force-reinstall --dry-run --quiet --report "${report}"
 else
     pip install osparc=="${version}" --force-reinstall --dry-run --quiet --report "${report}"
 fi
