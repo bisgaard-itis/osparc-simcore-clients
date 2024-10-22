@@ -9,11 +9,11 @@ report=$(mktemp)
 trap 'rm -rf ${report}' ERR
 
 if [ "${version}" == "latest_release" ]; then
-    pip install osparc --dry-run --quiet --report "${report}"
+    pip install osparc --force-reinstall --dry-run --quiet --report "${report}"
 elif [ "${version}" == "latest_master" ]; then
-    pip install osparc --dry-run --quiet --pre --report "${report}"
+    pip install osparc --force-reinstall --dry-run --quiet --pre --report "${report}"
 else
-    pip install osparc=="${version}" --dry-run --quiet --report "${report}"
+    pip install osparc=="${version}" --force-reinstall --dry-run --quiet --report "${report}"
 fi
-jq -r '.install[] | select(.metadata.name == "osparc") | .metadata.version' "${report}"
+jq -r '.install[] | select(.metadata.name == "osparc") | .metadata.version' "${report}" -e
 rm -rf "${report}"
