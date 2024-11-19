@@ -30,6 +30,8 @@ _KB: ByteSize = ByteSize(1024)  # in bytes
 _MB: ByteSize = ByteSize(_KB * 1024)  # in bytes
 _GB: ByteSize = ByteSize(_MB * 1024)  # in bytes
 
+_logger = logging.getLogger(__name__)
+
 # Dictionary to store start times of tests
 _test_start_times = {}
 
@@ -172,7 +174,13 @@ def large_server_file(
         upload_ram_usage=max(ram_statistics) - min(ram_statistics),
     )
 
-    files_api.delete_file(uploaded_file.id)
+    try:
+        files_api.delete_file(uploaded_file.id)
+    except osparc.ApiException:
+        _logger.warning(
+            f"Could not delete file on server in {file_with_number.__name__}",
+            exc_info=True,
+        )
 
 
 @pytest.fixture
@@ -206,4 +214,10 @@ def file_with_number(
     server_file = files_api.upload_file(file)
     yield server_file
 
-    files_api.delete_file(server_file.id)
+    try:
+        files_api.delete_file(server_file.id)
+    except osparc.ApiException:
+        _logger.warning(
+            f"Could not delete file on server in {file_with_number.__name__}",
+            exc_info=True,
+        )
