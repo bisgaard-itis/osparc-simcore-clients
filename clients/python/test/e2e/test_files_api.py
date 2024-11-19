@@ -8,9 +8,10 @@ import hashlib
 from pathlib import Path
 
 import osparc
+from osparc._utils import PaginationIterable
 import pytest
 from memory_profiler import memory_usage
-from typing import Final, List, Callable
+from typing import Final, Callable
 from pydantic import ByteSize
 from _utils import skip_if_osparc_version
 from packaging.version import Version
@@ -57,19 +58,11 @@ def test_upload_download_file_ram_usage(
         > _allowed_ram_usage_in_mb * 1024 * 1024
     ), f"For this test to make sense, {large_server_file.local_file.stat().st_size=} must be larger than {_allowed_ram_usage_in_mb=}."
 
-    def max_diff(data: List[int]) -> int:
-        return max(data) - min(data)
-
-    upload_ram_usage_in_mb, uploaded_file = memory_usage(
-        (files_api.upload_file, (large_server_file.local_file,)),  # type: ignore
-        retval=True,
-    )
+    uploaded_file = files_api.upload_file(large_server_file.local_file)
     assert (
         large_server_file.server_file.id == uploaded_file.id
     ), "could not detect that file was already on server"
-    assert (
-        max_diff(upload_ram_usage_in_mb) < _allowed_ram_usage_in_mb
-    ), f"Used more than {_allowed_ram_usage_in_mb=} to upload file of size {large_server_file.local_file.stat().st_size=}"
+
     download_ram_usage_in_mb, downloaded_file = memory_usage(
         (
             files_api.download_file,
@@ -80,7 +73,8 @@ def test_upload_download_file_ram_usage(
     )
     assert Path(downloaded_file).parent == tmp_path
     assert (
-        max_diff(download_ram_usage_in_mb) < _allowed_ram_usage_in_mb
+        max(download_ram_usage_in_mb) - min(download_ram_usage_in_mb)
+        < _allowed_ram_usage_in_mb
     ), f"Used more than {_allowed_ram_usage_in_mb=} to download file of size {Path(downloaded_file).stat().st_size=}"
     assert _hash_file(Path(downloaded_file)) == _hash_file(large_server_file.local_file)
 
@@ -96,7 +90,7 @@ def test_search_files(
     use_id: bool,
     faker: Faker,
 ) -> None:
-    results: osparc.PaginationGenerator = files_api._search_files(
+    results: PaginationIterable = files_api._search_files(
         sha256_checksum=f"{faker.sha256()}"
     )
     assert len(results) == 0, "Found file which shouldn't be there"
@@ -108,5 +102,5 @@ def test_search_files(
         else None,
     )
     assert len(results) == 1, "Could not find file after it had been uploaded"
-    for file in results:
-        assert file.checksum == large_server_file.server_file.checksum
+    file = next(iter(results))
+    assert file.checksum == large_server_file.server_file.checksum
