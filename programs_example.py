@@ -42,17 +42,18 @@ async def run(program_key: str, version: str) -> osparc.JobStatus:
         program_job = programs_api.create_program_job(
             program_key=program.id, version=program.version
         )
+        print(f"{program_job=}")
 
         with TemporaryDirectory() as tmp_dir:
             # Upload the input file
             tmp_file = Path(tmp_dir) / "tmpfile"
-            tmp_file.write_text("this is a test")
+            tmp_file.write_text("Hi oSPARC 👋")
             await files_api.upload_file_async(
                 file=tmp_file,
                 program_key=program.id,
                 program_version=program.version,
                 job_id=program_job.id,
-                workspace_path="workspace/tmpfile",
+                workspace_path="workspace/tmpdirectory/tmpfile",
             )
 
 
