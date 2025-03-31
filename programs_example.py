@@ -48,7 +48,7 @@ async def run(program_key: str, version: str) -> osparc.JobStatus:
             # Upload the input file
             tmp_file = Path(tmp_dir) / "tmpfile"
             tmp_file.write_text("Hi oSPARC 👋")
-            await files_api.upload_file_async(
+            await files_api.upload_file_to_program_job_async(
                 file=tmp_file,
                 program_key=program.id,
                 program_version=program.version,
