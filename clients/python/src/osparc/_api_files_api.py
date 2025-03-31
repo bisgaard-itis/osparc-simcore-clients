@@ -25,6 +25,7 @@ from .models import (
     FileUploadCompletionBody,
     FileUploadData,
     UploadedPart,
+    ClientFileInProgramJob,
 )
 from urllib.parse import urljoin
 import aiofiles
@@ -134,6 +135,10 @@ class FilesApi(_FilesApi):
     async def upload_file_async(
         self,
         file: Union[str, Path],
+        program_key: str,
+        program_version: str,
+        job_id: str,
+        workspace_path: str,
         timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
         max_concurrent_uploads: int = _MAX_CONCURRENT_UPLOADS,
         **kwargs,
@@ -150,10 +155,21 @@ class FilesApi(_FilesApi):
                 # if a file has the same sha256 checksum
                 # and name they are considered equal
                 return file_result
-        client_file: ClientFile = ClientFile(
-            filename=file.name,
-            filesize=file.stat().st_size,
-            sha256_checksum=checksum,
+        # ClientFileInProgramJob(
+        #     filename=file.name,
+        #     filesize=file.stat().st_size,
+        #     sha256_checksum=checksum,
+        # )
+        client_file = ClientFile(
+            ClientFileInProgramJob(
+                filename=file.name,
+                filesize=file.stat().st_size,
+                sha256_checksum=checksum,
+                program_key=program_key,
+                program_version=program_version,
+                job_id=job_id,
+                workspace_path=workspace_path,
+            )
         )
         client_upload_schema: ClientFileUploadData = super().get_upload_links(
             client_file=client_file, _request_timeout=timeout_seconds, **kwargs
