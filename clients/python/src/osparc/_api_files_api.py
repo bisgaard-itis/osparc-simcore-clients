@@ -25,7 +25,7 @@ from .models import (
     FileUploadCompletionBody,
     FileUploadData,
     UploadedPart,
-    ClientFileToProgramJob,
+    UserFileToProgramJob,
     UserFile,
 )
 from urllib.parse import urljoin
@@ -164,8 +164,8 @@ class FilesApi(_FilesApi):
                 # if a file has the same sha256 checksum
                 # and name they are considered equal
                 return file_result
-        user_file = UserFile(
-            ClientFileToProgramJob(
+        user_file = ClientFile(
+            UserFileToProgramJob(
                 filename=file.name,
                 filesize=file.stat().st_size,
                 sha256_checksum=checksum,
@@ -214,8 +214,8 @@ class FilesApi(_FilesApi):
                 # if a file has the same sha256 checksum
                 # and name they are considered equal
                 return file_result
-        user_file = UserFile(
-            ClientFile(
+        user_file = ClientFile(
+            UserFile(
                 filename=file.name,
                 filesize=file.stat().st_size,
                 sha256_checksum=checksum,
@@ -227,7 +227,7 @@ class FilesApi(_FilesApi):
 
     async def _upload_user_file(
         self,
-        user_file: UserFile,
+        client_file: ClientFile,
         file: Path,
         timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
         max_concurrent_uploads: int = _MAX_CONCURRENT_UPLOADS,
@@ -235,7 +235,7 @@ class FilesApi(_FilesApi):
     ) -> File:
         assert file.is_file()  # nosec
         client_upload_schema: ClientFileUploadData = super().get_upload_links(
-            user_file=user_file, _request_timeout=timeout_seconds, **kwargs
+            client_file=client_file, _request_timeout=timeout_seconds, **kwargs
         )
         chunk_size: int = client_upload_schema.upload_schema.chunk_size
         links: FileUploadData = client_upload_schema.upload_schema.links
@@ -243,12 +243,14 @@ class FilesApi(_FilesApi):
             iter(client_upload_schema.upload_schema.urls), start=1
         )
         n_urls: int = len(client_upload_schema.upload_schema.urls)
-        if n_urls < math.ceil(user_file.actual_instance.filesize / chunk_size):
+        if n_urls < math.ceil(client_file.actual_instance.filesize / chunk_size):
             raise RuntimeError(
                 "Did not receive sufficient number of upload URLs from the server."
             )
 
-        abort_body = BodyAbortMultipartUploadV0FilesFileIdAbortPost(user_file=user_file)
+        abort_body = BodyAbortMultipartUploadV0FilesFileIdAbortPost(
+            client_file=client_file
+        )
         upload_tasks: Set[asyncio.Task] = set()
         uploaded_parts: List[UploadedPart] = []
 
@@ -301,7 +303,7 @@ class FilesApi(_FilesApi):
             server_file: File = await self._complete_multipart_upload(
                 api_server_session,
                 links.complete_upload,  # type: ignore
-                user_file,
+                client_file,
                 uploaded_parts,
             )
             _logger.debug("File upload complete: %s", file.name)
@@ -311,11 +313,11 @@ class FilesApi(_FilesApi):
         self,
         http_client: AsyncHttpClient,
         complete_link: str,
-        user_file: UserFile,
+        client_file: ClientFile,
         uploaded_parts: List[UploadedPart],
     ) -> File:
         complete_payload = BodyCompleteMultipartUploadV0FilesFileIdCompletePost(
-            user_file=user_file,
+            client_file=client_file,
             uploaded_parts=FileUploadCompletionBody(parts=uploaded_parts),
         )
         response: Response = await http_client.post(
