@@ -18,19 +18,17 @@ def osparc_client():
     config = osparc.Configuration(
         host=user.host, username=user.key, password=user.secret
     )
-    print(config.host)
-    print(config.username)
-    print(config.password)
     return osparc.ApiClient(config)
 
 
 def check_credentials():
     with osparc_client() as api_client:
         user_api = osparc.UsersApi(api_client)
-        print(user_api.get_my_profile())
+        profile = user_api.get_my_profile()
+        print(profile.model_dump_json(indent=2))
 
 
-async def run(program_key: str, version: str) -> osparc.JobStatus:
+async def run(program_key: str, version: str):
     with osparc_client() as api_client:
         files_api = osparc.FilesApi(api_client)
         programs_api = osparc.ProgramsApi(api_client)
@@ -42,7 +40,7 @@ async def run(program_key: str, version: str) -> osparc.JobStatus:
         program_job = programs_api.create_program_job(
             program_key=program.id, version=program.version
         )
-        print(f"{program_job=}")
+        print(program_job.model_dump_json(indent=2))
 
         with TemporaryDirectory() as tmp_dir:
             # Upload the input file
